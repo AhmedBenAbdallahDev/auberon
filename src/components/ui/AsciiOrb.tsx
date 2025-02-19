@@ -1,87 +1,92 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
+import * as THREE from 'three'
 
 const ASCII_CHARS = '.:-=+*#%@'
-const DENSITY = 0.5
 
 const AsciiOrb = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const outputRef = useRef<HTMLPreElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const preRef = useRef<HTMLPreElement>(null)
 
   useEffect(() => {
-    if (!canvasRef.current || !outputRef.current) return
+    if (!containerRef.current || !preRef.current) return
 
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    const renderer = new THREE.WebGLRenderer({ alpha: true })
+    
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    containerRef.current.appendChild(renderer.domElement)
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-
-    const createAsciiArt = () => {
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      const pixels = imageData.data
-      let asciiArt = ''
-
-      for (let y = 0; y < canvas.height; y += 2) {
-        for (let x = 0; x < canvas.width; x += 1) {
-          const index = (y * canvas.width + x) * 4
-          const brightness = (pixels[index] + pixels[index + 1] + pixels[index + 2]) / 3
-          const charIndex = Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))
-          asciiArt += ASCII_CHARS[charIndex]
-        }
-        asciiArt += '\\n'
-      }
-
-      outputRef.current!.textContent = asciiArt
-    }
-
-    // Draw and animate the orb
-    const drawOrb = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      
-      const centerX = canvas.width / 2
-      const centerY = canvas.height / 2
-      const radius = Math.min(canvas.width, canvas.height) * 0.2
-
-      ctx.beginPath()
-      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
-      ctx.fillStyle = '#ffffff'
-      ctx.fill()
-
-      createAsciiArt()
-    }
-
-    // Animation
-    gsap.to({}, {
-      duration: 2,
-      repeat: -1,
-      onUpdate: drawOrb,
-      ease: "power1.inOut"
+    const geometry = new THREE.SphereGeometry(2, 32, 32)
+    const material = new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      wireframe: true
     })
+    const sphere = new THREE.Mesh(geometry, material)
+    scene.add(sphere)
 
-    // Handle resize
+    const light = new THREE.DirectionalLight(0xffffff, 1)
+    light.position.set(5, 5, 5)
+    scene.add(light)
+    scene.add(new THREE.AmbientLight(0x404040))
+
+    camera.position.z = 5
+
+    const toAscii = (pixels: ImageData) => {
+      let ascii = ''
+      for (let i = 0; i < pixels.height; i += 2) {
+        for (let j = 0; j < pixels.width; j++) {
+          const idx = (i * pixels.width + j) * 4
+          const brightness = (pixels.data[idx] + pixels.data[idx + 1] + pixels.data[idx + 2]) / 3
+          const char = ASCII_CHARS[Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))]
+          ascii += char || ' '
+        }
+        ascii += '\\n'
+      }
+      return ascii
+    }
+
+    const animate = () => {
+      requestAnimationFrame(animate)
+      sphere.rotation.x += 0.01
+      sphere.rotation.y += 0.01
+      renderer.render(scene, camera)
+
+      const context = document.createElement('canvas').getContext('2d')
+      if (context) {
+        context.canvas.width = window.innerWidth / 4
+        context.canvas.height = window.innerHeight / 4
+        context.drawImage(renderer.domElement, 0, 0, context.canvas.width, context.canvas.height)
+        const pixels = context.getImageData(0, 0, context.canvas.width, context.canvas.height)
+        preRef.current!.textContent = toAscii(pixels)
+      }
+    }
+
+    animate()
+
     const handleResize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      drawOrb()
+      const width = window.innerWidth
+      const height = window.innerHeight
+      camera.aspect = width / height
+      camera.updateProjectionMatrix()
+      renderer.setSize(width, height)
     }
 
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      containerRef.current?.removeChild(renderer.domElement)
+      renderer.dispose()
+    }
   }, [])
 
   return (
     <div className="w-full h-full relative overflow-hidden">
-      <canvas
-        ref={canvasRef}
-        className="absolute top-0 left-0 opacity-0 pointer-events-none"
-      />
+      <div ref={containerRef} className="absolute opacity-0" />
       <pre
-        ref={outputRef}
+        ref={preRef}
         className="absolute top-0 left-0 w-full h-full text-[4px] leading-[4px] text-white font-mono whitespace-pre opacity-50"
-        style={{ fontFamily: 'monospace' }}
       />
     </div>
   )
