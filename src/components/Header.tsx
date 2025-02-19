@@ -3,7 +3,7 @@ const Header = () => {
   return (
     <header className='w-full flex items-center relative justify-between'>
         <div className='flex'>
-            <span className='text-2xl font-bold'>DNA</span>
+            <span className='text-2xl font-bold'>AUBERON</span>
         </div>
         <div className='flex items-center gap-10'>
             <ul className='flex gap-10 text-gray-400'>

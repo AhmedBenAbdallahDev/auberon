@@ -3,7 +3,7 @@ import { useState } from "react";
 import { cn } from "@/utils/cn";
 import animationData from "@/data/confetti.json";
 import WebsiteMockup from "./WebsiteMockup";
-import Soda from "../SodaAnimation/Soda"
+import Soda from "../SodaAnimation/Soda";
 import ProgLangList from "./ProgLangList";
 
 export const BentoGrid = ({
@@ -62,7 +62,7 @@ export const BentoGridItem = ({
   };
 
   const handleCopy = () => {
-    const text = "idea@example.com";
+    const text = "contact@auberon.agency";
     navigator.clipboard.writeText(text);
     setCopied(true);
   };

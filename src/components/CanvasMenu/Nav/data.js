@@ -19,19 +19,19 @@ export const links = [
 
 export const footerLinks = [
     {
-        title: "Facebook",
-        href: "/"
+        title: "GitHub",
+        href: "https://github.com/AhmedBenAbdallahDev/auberon"
     },
     {
         title: "LinkedIn",
-        href: "/"
+        href: "https://www.linkedin.com/company/auberon-agency"
     },
     {
-        title: "Instagram",
-        href: "/"
+        title: "Behance",
+        href: "https://www.behance.net/auberon"
     },
     {
-        title: "Twitter",
-        href: "/"
+        title: "Dribbble",
+        href: "https://dribbble.com/auberon"
     }
 ]

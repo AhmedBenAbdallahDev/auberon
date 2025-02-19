@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { motion } from "framer-motion";
 
 const About = () => {
@@ -43,7 +43,7 @@ const About = () => {
         transition={{ duration: 0.5 }}
         className='flex z-50 flex-col w-full text-xl leading-[2] md:text-3xl max-w-4xl md:leading-[2]'
       >
-        Welcome to iDEA agency, where creativity meets technology. We are a team of passionate designers and developers dedicated to crafting stunning websites that not only look great but also deliver exceptional user experiences. With years of industry experience, we specialize in creating custom digital solutions tailored to your business needs. Our mission is to elevate your brand online and help you stand out in the digital landscape.
+        Welcome to AUBERON agency, where innovation meets digital excellence. We are a forward-thinking team of designers and developers crafting extraordinary digital experiences. Our expertise lies in creating cutting-edge websites and applications that transcend conventional boundaries. With a deep understanding of modern technology and design principles, we transform your vision into powerful digital solutions. Our mission is to elevate your digital presence and create lasting impressions in the ever-evolving digital landscape.
       </motion.div>
     </div>
   );

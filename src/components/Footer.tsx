@@ -99,28 +99,38 @@ export function Footer() {
             <div className='w-full flex flex-col md:flex-row gap-10 justify-between'>
                 <div className='flex gap-10 uppercase'>
                     <div className=' relative overflow-hidden group/line cursor-pointer'>
-                        <h1 className='leading-none pb-2'>mail</h1>
-                        <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        <a href="mailto:contact@auberon.agency" className='block'>
+                            <h1 className='leading-none pb-2'>mail</h1>
+                            <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        </a>
                     </div>
                     <div className=' relative overflow-hidden group/line cursor-pointer'>
-                        <h1 className='leading-none pb-2'>github</h1>
-                        <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        <a href="https://github.com/AhmedBenAbdallahDev/auberon" target="_blank" rel="noopener noreferrer" className='block'>
+                            <h1 className='leading-none pb-2'>github</h1>
+                            <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        </a>
                     </div>
                     <div className=' relative overflow-hidden group/line cursor-pointer'>
-                        <h1 className='leading-none pb-2'>behance</h1>
-                        <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        <a href="https://www.behance.net/auberon" target="_blank" rel="noopener noreferrer" className='block'>
+                            <h1 className='leading-none pb-2'>behance</h1>
+                            <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        </a>
                     </div>
                     <div className=' relative overflow-hidden group/line cursor-pointer'>
-                        <h1 className='leading-none pb-2'>dribble</h1>
-                        <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        <a href="https://dribbble.com/auberon" target="_blank" rel="noopener noreferrer" className='block'>
+                            <h1 className='leading-none pb-2'>dribble</h1>
+                            <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        </a>
                     </div>
                     <div className=' relative overflow-hidden group/line cursor-pointer'>
-                        <h1 className='leading-none pb-2'>linkedin</h1>
-                        <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        <a href="https://www.linkedin.com/company/auberon-agency" target="_blank" rel="noopener noreferrer" className='block'>
+                            <h1 className='leading-none pb-2'>linkedin</h1>
+                            <span className='block bg-white h-[2px] -translate-x-full group-hover/line:translate-x-0 group-hover/line:opacity-100 opacity-0 duration-500' />
+                        </a>
                     </div>
                 </div>
                 <div className='flex gap-10 uppercase'>
-                    <span>2024 © CharltonK.dev</span>
+                    <span>2024 © AUBERON Agency</span>
                 </div>
             </div>
         </footer>

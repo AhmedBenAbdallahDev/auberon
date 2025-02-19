@@ -1,44 +1,45 @@
-# Agency Website
+# AUBERON Agency
 
-Welcome to the **Agency Website** project! This is a modern, responsive website template built using **Next.js**. It's designed to showcase agency services with a sleek and interactive design, incorporating 3D elements using **Spline**, and animations with **Framer Motion**. The website is styled with **Tailwind CSS** and developed with **TypeScript** for robust type safety.
+Welcome to the **AUBERON Agency** website! This is a modern, sophisticated digital agency platform built using **Next.js**. Our website showcases our innovative approach to digital solutions, featuring stunning 3D elements powered by **Spline**, smooth animations with **Framer Motion**, styled with **Tailwind CSS**, and developed with **TypeScript** for robust performance.
 
 
 ## 🔗 Live Demo
 
-Check out the live version of the Agency Website:  
-[**Live Demo**](https://agency01.vercel.app/)
+Experience the AUBERON difference:  
+[**Live Demo**](https://auberon-agency.vercel.app/)
 
-## 🚀 Purpose
+## 🚀 Our Vision
 
-The goal of this project is to provide a visually stunning and interactive website template for agencies. The website features:
+AUBERON Agency is committed to delivering exceptional digital experiences through:
 
-- A modern, professional design.
-- 3D elements and animations to enhance user experience.
-- Responsive layout to ensure optimal viewing on all devices.
+- Cutting-edge design and technology integration
+- Immersive 3D elements and smooth animations
+- Responsive, user-centric interfaces
+- Performance-driven development
 
-Built with **Next.js** for server-side rendering and static site generation, **Tailwind CSS** for utility-first styling, **Framer Motion** for animations, **Spline** for 3D graphics, and **TypeScript** for type safety, this template offers both flexibility and performance.
+Built with modern technologies including **Next.js** for optimal performance, **Tailwind CSS** for sophisticated styling, **Framer Motion** for fluid animations, **Spline** for immersive 3D graphics, and **TypeScript** for reliable code quality.
 
-## 🛠️ Frameworks & Technologies
+## 🛠️ Technology Stack
 
-This project utilizes the following technologies:
+Our platform leverages the following technologies:
 
-- **Next.js** - React framework for server-side rendering (SSR) and static site generation (SSG).
-- **React** - For building the user interface with reusable components.
-- **Tailwind CSS** - For utility-first styling and responsive design.
-- **Framer Motion** - For smooth animations and interactive elements.
-- **Spline** - For integrating 3D graphics into the website.
-- **TypeScript** - For static type checking and improved code quality.
+- **Next.js** - For server-side rendering (SSR) and static site generation (SSG)
+- **React** - Creating dynamic, responsive user interfaces
+- **Tailwind CSS** - Advanced, utility-first styling
+- **Framer Motion** - Smooth, professional animations
+- **Spline** - Immersive 3D graphics integration
+- **TypeScript** - Enterprise-grade type safety
 
-## 📝 Setup & Customization
+## 📝 Development Setup
 
-To get started with the project:
+To run the project locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/charltonkdev/agency-website.git
+git clone https://github.com/AhmedBenAbdallahDev/auberon.git
 
 # Navigate to the project folder
-cd agency-website
+cd auberon
 
 # Install dependencies
 npm install
@@ -46,5 +47,5 @@ npm install
 # Run the development server
 npm run dev
 
-# Open http://localhost:3000 in your browser to view the project
+# Open http://localhost:3000 in your browser
 ```
