@@ -16,7 +16,6 @@
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.5.0",
-    "aniso": "^1.0.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.2.14",
     "gsap": "^3.12.5",
