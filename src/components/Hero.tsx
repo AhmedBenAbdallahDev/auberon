@@ -1,6 +1,10 @@
 import { Spotlight } from "./ui/Spotlight";
 import HeroContent from "./ui/HeroContent";
-import AsciiOrb from "./ui/AsciiOrb";
+import dynamic from 'next/dynamic';
+
+const Scene = dynamic(() => import('./3D/Scene'), {
+    ssr: false
+})
 
 export default function Hero() {
     return (
@@ -17,7 +21,7 @@ export default function Hero() {
             
             <HeroContent />
             <div className="w-full h-full absolute bottom-0">
-                <AsciiOrb />
+                <Scene />
             </div>
         </div>
     );
