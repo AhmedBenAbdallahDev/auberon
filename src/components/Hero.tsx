@@ -1,7 +1,6 @@
-import React from "react";
 import { Spotlight } from "./ui/Spotlight";
 import HeroContent from "./ui/HeroContent";
-import LostOrb from "./ui/LostOrb";
+import AsciiOrb from "./ui/AsciiOrb";
 
 export default function Hero() {
     return (
@@ -18,7 +17,7 @@ export default function Hero() {
             
             <HeroContent />
             <div className="w-full h-full absolute bottom-0">
-                <LostOrb />
+                <AsciiOrb />
             </div>
         </div>
     );
