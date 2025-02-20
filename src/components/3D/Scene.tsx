@@ -45,7 +45,7 @@ export default function Scene() {
       style={{width: '100%', height: '100%', position: 'absolute', background: 'transparent'}}
       onError={(e) => {
         console.error('Canvas Error:', e);
-        setError(e);
+        setError(new Error(e.message || 'Canvas error occurred'));
       }}
     >
       <Suspense fallback={<LoadingFallback />}>
