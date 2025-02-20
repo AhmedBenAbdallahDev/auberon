@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-three/drei": "^9.122.0",
-    "@react-three/fiber": "^8.18.0",
+    "@react-three/drei": "^9.92.7",
+    "@react-three/fiber": "^8.15.12",
     "@studio-freight/lenis": "^1.0.42",
     "@tabler/icons-react": "^3.30.0",
     "@tsparticles/engine": "^3.8.1",
@@ -32,7 +32,8 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.166.1",
-    "three-globe": "^2.41.12"
+    "three-globe": "^2.41.12",
+    "leva": "^0.9.35"
   },
   "devDependencies": {
     "@types/locomotive-scroll": "^4.1.4",
