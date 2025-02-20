@@ -9,12 +9,13 @@ export default function Model() {
   const torus = useRef<Mesh>(null);
 
   // Load model with error handling
-  const { nodes } = useGLTF("/medias/torrus.glb", undefined, 
-    (error) => {
+  const { nodes } = useGLTF("/medias/torrus.glb", {
+    onError: (error) => {
       console.error('GLTF Loading Error:', error);
       setModelError(error);
-    }
-  );
+    },
+    draco: true
+  });
 
   useFrame(() => {
     if (torus.current) {
@@ -51,12 +52,12 @@ export default function Model() {
     return (
       <group scale={viewport.width / 3.75}>
         <Text
-          font="/fonts/PPNeueMontreal-Bold.otf"
           position={[0, 0, -1]}
           fontSize={0.5}
           color="white"
           anchorX="center"
           anchorY="middle"
+          font="sans-serif"
           onError={(error) => {
             console.error('Text Error:', error);
             setModelError(error);
