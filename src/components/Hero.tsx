@@ -1,10 +1,5 @@
 import { Spotlight } from "./ui/Spotlight";
 import HeroContent from "./ui/HeroContent";
-import dynamic from 'next/dynamic';
-
-const Scene = dynamic(() => import('./3D/Scene'), {
-    ssr: false
-})
 
 export default function Hero() {
     return (
@@ -18,11 +13,7 @@ export default function Hero() {
                 className="-top-40 left-20 md:left-80 md:-top-20"
                 fill="blue"
             />
-            
             <HeroContent />
-            <div className="w-full h-full absolute bottom-0">
-                <Scene />
-            </div>
         </div>
     );
 }
