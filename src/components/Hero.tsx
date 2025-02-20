@@ -22,7 +22,7 @@ export default function Hero() {
             />
             <HeroContent />
             <div className="absolute inset-0 z-0">
-                <Canvas>
+                <Canvas style={{background: 'transparent'}}>
                     <GlassModel />
                     <directionalLight intensity={2} position={[0, 2, 3]}/>
                     <Environment preset="city" />

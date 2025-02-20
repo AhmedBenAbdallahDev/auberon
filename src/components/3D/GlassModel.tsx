@@ -2,13 +2,20 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei'
-import { Mesh } from 'three'
+import { Mesh, BufferGeometry } from 'three'
 import { useControls } from 'leva'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+
+type GLTFResult = GLTF & {
+  nodes: {
+    Torus002: THREE.Mesh<THREE.BufferGeometry>
+  }
+}
 
 export default function GlassModel() {
   const mesh = useRef<Mesh>(null)
 
-  const { nodes } = useGLTF('/medias/torrus.glb')
+  const { nodes } = useGLTF('/medias/torrus.glb') as GLTFResult
 
   const { 
     thickness,
@@ -44,7 +51,8 @@ export default function GlassModel() {
   })
 
   return (
-    <mesh ref={mesh} scale={1.5} geometry={nodes.Torus002.geometry}>
+    <mesh ref={mesh} scale={1.5}>
+      <primitive object={nodes.Torus002.geometry} attach="geometry" />
       <MeshTransmissionMaterial
         thickness={thickness}
         roughness={roughness}
