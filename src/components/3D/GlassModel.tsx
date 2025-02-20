@@ -4,7 +4,7 @@ import { MeshTransmissionMaterial, useGLTF, Text } from "@react-three/drei";
 import { useFrame, useThree } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { Mesh } from 'three'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import type { GLTF } from '@react-three/drei/types/loader'
 
 type GLTFResult = GLTF & {
   nodes: {
