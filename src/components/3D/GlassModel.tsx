@@ -25,14 +25,18 @@ export default function GlassModel() {
         if (torus.current) {
             torus.current.rotation.x += 0.02
         }
+
+        const speed = 0.3;
+        const width = 20; // Width of the text + spacing
+        
         if (textGroup1.current) {
-            textGroup1.current.position.x = ((state.clock.getElapsedTime() * 0.5) % 10) - 5;
+            textGroup1.current.position.x = -(state.clock.getElapsedTime() * speed % width);
         }
         if (textGroup2.current) {
-            textGroup2.current.position.x = (-(state.clock.getElapsedTime() * 0.5) % 10) + 5;
+            textGroup2.current.position.x = (state.clock.getElapsedTime() * speed % width);
         }
         if (textGroup3.current) {
-            textGroup3.current.position.x = ((state.clock.getElapsedTime() * 0.5) % 10) - 5;
+            textGroup3.current.position.x = -(state.clock.getElapsedTime() * speed % width);
         }
     })
 
@@ -44,27 +48,38 @@ export default function GlassModel() {
         chromaticAberration: { value: 0.02, min: 0, max: 1},
         backside: { value: true},
     }, { hidden: true })
+
+    const textContent = "Transforming Ideas into Digital Excellence • ".repeat(3);
     
     return (
         <group scale={viewport.width / 3.75}>
-            <group position={[0, 1, -1]}>
+            <group position={[0, 1.5, -1]}>
                 <group ref={textGroup1}>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.3} color="white" anchorX="center" anchorY="middle">
-                        Transforming Ideas into Digital Excellence •
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle">
+                        {textContent}
+                    </Text>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle" position={[20, 0, 0]}>
+                        {textContent}
                     </Text>
                 </group>
             </group>
             <group position={[0, 0, -1]}>
                 <group ref={textGroup2}>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.3} color="white" anchorX="center" anchorY="middle">
-                        Transforming Ideas into Digital Excellence •
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle">
+                        {textContent}
+                    </Text>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle" position={[20, 0, 0]}>
+                        {textContent}
                     </Text>
                 </group>
             </group>
-            <group position={[0, -1, -1]}>
+            <group position={[0, -1.5, -1]}>
                 <group ref={textGroup3}>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.3} color="white" anchorX="center" anchorY="middle">
-                        Transforming Ideas into Digital Excellence •
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle">
+                        {textContent}
+                    </Text>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle" position={[20, 0, 0]}>
+                        {textContent}
                     </Text>
                 </group>
             </group>
