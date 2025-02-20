@@ -31,12 +31,12 @@ export default function GlassModel() {
         ior: { value: 1.2, min: 0, max: 3, step: 0.1 },
         chromaticAberration: { value: 0.02, min: 0, max: 1},
         backside: { value: true},
-    })
+    }, { hidden: true })
     
     return (
         <group scale={viewport.width / 3.75} >
             <Text font={'/fonts/PPNeueMontreal-Bold.otf'} position={[0, 0, -1]} fontSize={0.5} color="white" anchorX="center" anchorY="middle">
-                hello world!
+                Transforming Ideas into Digital Excellence
             </Text>
             <mesh ref={torus} {...nodes.Torus002}>
                 <MeshTransmissionMaterial {...materialProps}/>
