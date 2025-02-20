@@ -1,10 +1,9 @@
+'use client';
 import { Spotlight } from "./ui/Spotlight";
 import HeroContent from "./ui/HeroContent";
 import dynamic from 'next/dynamic';
-import { Canvas } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
 
-const GlassModel = dynamic(() => import('./3D/GlassModel'), {
+const Scene3D = dynamic(() => import('./3D/Scene3D'), {
     ssr: false
 });
 
@@ -22,11 +21,7 @@ export default function Hero() {
             />
             <HeroContent />
             <div className="absolute inset-0 z-0">
-                <Canvas style={{background: 'transparent'}}>
-                    <GlassModel />
-                    <directionalLight intensity={2} position={[0, 2, 3]}/>
-                    <Environment preset="city" />
-                </Canvas>
+                <Scene3D />
             </div>
         </div>
     );

@@ -4,9 +4,18 @@ import { MeshTransmissionMaterial, useGLTF, Text } from "@react-three/drei";
 import { useFrame, useThree } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { Mesh } from 'three'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+
+type GLTFResult = GLTF & {
+  nodes: {
+    Torus002: THREE.Mesh
+  }
+}
+
+useGLTF.preload("/medias/torrus.glb")
 
 export default function GlassModel() {
-    const { nodes } = useGLTF("/medias/torrus.glb");
+    const { nodes } = useGLTF("/medias/torrus.glb") as GLTFResult;
     const { viewport } = useThree()
     const torus = useRef<Mesh>(null);
     
