@@ -26,17 +26,21 @@ export default function GlassModel() {
             torus.current.rotation.x += 0.02
         }
 
-        const speed = 0.3;
-        const width = 20; // Width of the text + spacing
+        const speed = 0.5;
+        const width = 15; // Reduced width for tighter spacing
+        
+        // Calculate positions with offset to start mid-loop
+        const time = state.clock.getElapsedTime() * speed;
+        const offset = width / 2; // Start from middle
         
         if (textGroup1.current) {
-            textGroup1.current.position.x = -(state.clock.getElapsedTime() * speed % width);
+            textGroup1.current.position.x = -((time + offset) % width);
         }
         if (textGroup2.current) {
-            textGroup2.current.position.x = (state.clock.getElapsedTime() * speed % width);
+            textGroup2.current.position.x = ((time + offset) % width);
         }
         if (textGroup3.current) {
-            textGroup3.current.position.x = -(state.clock.getElapsedTime() * speed % width);
+            textGroup3.current.position.x = -((time + offset) % width);
         }
     })
 
@@ -49,36 +53,36 @@ export default function GlassModel() {
         backside: { value: true},
     }, { hidden: true })
 
-    const textContent = "Transforming Ideas into Digital Excellence • ".repeat(3);
+    const textContent = "Transforming Ideas into Digital Excellence • ".repeat(2);
     
     return (
         <group scale={viewport.width / 3.75}>
-            <group position={[0, 1.5, -1]}>
+            <group position={[0, 0.6, -1]}>
                 <group ref={textGroup1}>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle">
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle" position={[20, 0, 0]}>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle" position={[15, 0, 0]}>
                         {textContent}
                     </Text>
                 </group>
             </group>
             <group position={[0, 0, -1]}>
                 <group ref={textGroup2}>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle">
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle" position={[20, 0, 0]}>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle" position={[15, 0, 0]}>
                         {textContent}
                     </Text>
                 </group>
             </group>
-            <group position={[0, -1.5, -1]}>
+            <group position={[0, -0.6, -1]}>
                 <group ref={textGroup3}>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle">
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.5} color="white" anchorX="left" anchorY="middle" position={[20, 0, 0]}>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle" position={[15, 0, 0]}>
                         {textContent}
                     </Text>
                 </group>
