@@ -3,19 +3,15 @@ import { MeshTransmissionMaterial, useGLTF, Text, Html } from "@react-three/drei
 import { useFrame, useThree } from "@react-three/fiber";
 import { Mesh } from "three";
 
+useGLTF.preload("/medias/torrus.glb");
+
 export default function Model() {
   const [modelError, setModelError] = useState<Error | null>(null);
   const { viewport } = useThree();
   const torus = useRef<Mesh>(null);
 
   // Load model with error handling
-  const { nodes } = useGLTF("/medias/torrus.glb", {
-    onError: (error) => {
-      console.error('GLTF Loading Error:', error);
-      setModelError(error);
-    },
-    draco: true
-  });
+  const { nodes } = useGLTF("/medias/torrus.glb");
 
   useFrame(() => {
     if (torus.current) {
@@ -23,7 +19,6 @@ export default function Model() {
         torus.current.rotation.x += 0.02;
       } catch (error) {
         console.error('Animation Error:', error);
-        // Don't set state here to avoid infinite renders
       }
     }
   });
@@ -58,10 +53,6 @@ export default function Model() {
           anchorX="center"
           anchorY="middle"
           font="sans-serif"
-          onError={(error) => {
-            console.error('Text Error:', error);
-            setModelError(error);
-          }}
         >
           AUBERON
         </Text>
