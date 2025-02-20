@@ -1,74 +1,38 @@
 'use client';
-import { useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei'
-import { Mesh, BufferGeometry } from 'three'
+import React, { useRef } from 'react'
+import { MeshTransmissionMaterial, useGLTF, Text } from "@react-three/drei";
+import { useFrame, useThree } from '@react-three/fiber'
 import { useControls } from 'leva'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
-
-type GLTFResult = GLTF & {
-  nodes: {
-    Torus002: THREE.Mesh<THREE.BufferGeometry>
-  }
-}
+import { Mesh } from 'three'
 
 export default function GlassModel() {
-  const mesh = useRef<Mesh>(null)
+    const { nodes } = useGLTF("/medias/torrus.glb");
+    const { viewport } = useThree()
+    const torus = useRef<Mesh>(null);
+    
+    useFrame( () => {
+        if (torus.current) {
+            torus.current.rotation.x += 0.02
+        }
+    })
 
-  const { nodes } = useGLTF('/medias/torrus.glb') as GLTFResult
-
-  const { 
-    thickness,
-    roughness,
-    chromaticAberration,
-    anisotropy,
-    distortion,
-    distortionScale,
-    temporalDistortion,
-    clearcoat,
-    attenuationDistance,
-    attenuationColor,
-    color
-  } = useControls({
-    thickness: { value: 0.5, min: 0, max: 2, step: 0.1 },
-    roughness: { value: 0, min: 0, max: 1, step: 0.1 },
-    chromaticAberration: { value: 0.2, min: 0, max: 1, step: 0.1 },
-    anisotropy: { value: 0.3, min: 0, max: 1, step: 0.1 },
-    distortion: { value: 0.2, min: 0, max: 1, step: 0.1 },
-    distortionScale: { value: 0.4, min: 0, max: 1, step: 0.1 },
-    temporalDistortion: { value: 0.4, min: 0, max: 1, step: 0.1 },
-    clearcoat: { value: 0.1, min: 0, max: 1, step: 0.1 },
-    attenuationDistance: { value: 1.0, min: 0, max: 2, step: 0.1 },
-    attenuationColor: '#ffffff',
-    color: '#ffffff'
-  })
-
-  useFrame((state) => {
-    if (mesh.current) {
-      mesh.current.rotation.x = state.clock.getElapsedTime() * 0.3
-      mesh.current.rotation.y = state.clock.getElapsedTime() * 0.2
-    }
-  })
-
-  return (
-    <mesh ref={mesh} scale={1.5}>
-      <primitive object={nodes.Torus002.geometry} attach="geometry" />
-      <MeshTransmissionMaterial
-        thickness={thickness}
-        roughness={roughness}
-        chromaticAberration={chromaticAberration}
-        anisotropy={anisotropy}
-        distortion={distortion}
-        distortionScale={distortionScale}
-        temporalDistortion={temporalDistortion}
-        clearcoat={clearcoat}
-        attenuationDistance={attenuationDistance}
-        attenuationColor={attenuationColor}
-        color={color}
-        samples={4}
-        resolution={512}
-        transmission={1}
-      />
-    </mesh>
-  )
+    const materialProps = useControls({
+        thickness: { value: 0.2, min: 0, max: 3, step: 0.05 },
+        roughness: { value: 0, min: 0, max: 1, step: 0.1 },
+        transmission: {value: 1, min: 0, max: 1, step: 0.1},
+        ior: { value: 1.2, min: 0, max: 3, step: 0.1 },
+        chromaticAberration: { value: 0.02, min: 0, max: 1},
+        backside: { value: true},
+    })
+    
+    return (
+        <group scale={viewport.width / 3.75} >
+            <Text font={'/fonts/PPNeueMontreal-Bold.otf'} position={[0, 0, -1]} fontSize={0.5} color="white" anchorX="center" anchorY="middle">
+                hello world!
+            </Text>
+            <mesh ref={torus} {...nodes.Torus002}>
+                <MeshTransmissionMaterial {...materialProps}/>
+            </mesh>
+        </group>
+    )
 } 
