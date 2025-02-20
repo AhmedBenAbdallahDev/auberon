@@ -9,19 +9,12 @@ export default function Model() {
   const torus = useRef<Mesh>(null);
 
   // Load model with error handling
-  const { nodes, error: gltfError } = useGLTF("/medias/torrus.glb", true, 
+  const { nodes } = useGLTF("/medias/torrus.glb", undefined, 
     (error) => {
       console.error('GLTF Loading Error:', error);
       setModelError(error);
     }
   );
-
-  useEffect(() => {
-    if (gltfError) {
-      console.error('GLTF Error:', gltfError);
-      setModelError(gltfError);
-    }
-  }, [gltfError]);
 
   useFrame(() => {
     if (torus.current) {
