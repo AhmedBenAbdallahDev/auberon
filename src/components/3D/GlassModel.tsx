@@ -52,12 +52,12 @@ export default function GlassModel() {
         }
 
         if (firstText.current && secondText.current) {
-            gsap.set(firstText.current.position, { x: xPercent });
-            gsap.set(secondText.current.position, { x: xPercent });
+            gsap.set(firstText.current.position, { x: xPercent * 0.2 });
+            gsap.set(secondText.current.position, { x: xPercent * 0.2 });
         }
 
         requestAnimationFrame(animate);
-        xPercent += 0.1 * direction;
+        xPercent += 0.5 * direction;
     }
 
     useFrame(() => {
@@ -76,39 +76,43 @@ export default function GlassModel() {
     }, { hidden: true })
 
     return (
-        <group scale={viewport.width / 3.75}>
-            <group position={[0, 0, -1]} ref={slider}>
-                <group ref={firstText}>
-                    <Text 
-                        font={'/fonts/PPNeueMontreal-Bold.otf'} 
-                        fontSize={0.6} 
-                        color="white" 
-                        anchorX="left" 
-                        anchorY="middle"
-                        letterSpacing={-0.05}
-                        maxWidth={20}
-                    >
-                        Transforming Ideas into Digital Excellence •
-                    </Text>
-                </group>
-                <group ref={secondText} position={[20, 0, 0]}>
-                    <Text 
-                        font={'/fonts/PPNeueMontreal-Bold.otf'} 
-                        fontSize={0.6} 
-                        color="white" 
-                        anchorX="left" 
-                        anchorY="middle"
-                        letterSpacing={-0.05}
-                        maxWidth={20}
-                    >
-                        Transforming Ideas into Digital Excellence •
-                    </Text>
+        <>
+            {/* Text Layer */}
+            <group position={[0, -2, 0]}>
+                <group ref={slider} position={[0, 0, 0]}>
+                    <group ref={firstText} position={[-viewport.width/2, 0, 0]}>
+                        <Text 
+                            font={'/fonts/PPNeueMontreal-Bold.otf'} 
+                            fontSize={1} 
+                            color="white" 
+                            anchorX="left" 
+                            anchorY="middle"
+                            letterSpacing={-0.05}
+                        >
+                            Transforming Ideas into Digital Excellence •
+                        </Text>
+                    </group>
+                    <group ref={secondText} position={[viewport.width/2, 0, 0]}>
+                        <Text 
+                            font={'/fonts/PPNeueMontreal-Bold.otf'} 
+                            fontSize={1} 
+                            color="white" 
+                            anchorX="left" 
+                            anchorY="middle"
+                            letterSpacing={-0.05}
+                        >
+                            Transforming Ideas into Digital Excellence •
+                        </Text>
+                    </group>
                 </group>
             </group>
 
-            <mesh ref={torus} {...nodes.Torus002}>
-                <MeshTransmissionMaterial {...materialProps}/>
-            </mesh>
-        </group>
+            {/* 3D Model Layer */}
+            <group scale={viewport.width / 3.75}>
+                <mesh ref={torus} {...nodes.Torus002}>
+                    <MeshTransmissionMaterial {...materialProps}/>
+                </mesh>
+            </group>
+        </>
     )
 } 
