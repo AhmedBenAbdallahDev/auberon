@@ -18,18 +18,25 @@ export default function GlassModel() {
     const { nodes } = useGLTF("/medias/torrus.glb") as unknown as GLTFResult;
     const { viewport } = useThree()
     const torus = useRef<Mesh>(null);
-    const slider = useRef<Group>(null);
-    const firstText = useRef<Group>(null);
-    const secondText = useRef<Group>(null);
+    
+    // Row 1
+    const firstText1 = useRef<Group>(null);
+    const secondText1 = useRef<Group>(null);
+    // Row 2
+    const firstText2 = useRef<Group>(null);
+    const secondText2 = useRef<Group>(null);
+    // Row 3
+    const firstText3 = useRef<Group>(null);
+    const secondText3 = useRef<Group>(null);
 
     let xPercent = 0;
 
     useEffect(() => {
-        // Initial setup - position second text at the width of first text
-        if (firstText.current && secondText.current) {
-            const width = 25; // Width of text + spacing
-            secondText.current.position.x = width;
-        }
+        // Initial setup - position second texts
+        const width = 25;
+        if (secondText1.current) secondText1.current.position.x = width;
+        if (secondText2.current) secondText2.current.position.x = width;
+        if (secondText3.current) secondText3.current.position.x = width;
         requestAnimationFrame(animate);
     }, []);
 
@@ -41,14 +48,25 @@ export default function GlassModel() {
             xPercent = -100;
         }
         
-        if (firstText.current && secondText.current) {
-            const width = 25; // Width of text + spacing
-            firstText.current.position.x = (xPercent * width) / 100;
-            secondText.current.position.x = (xPercent * width) / 100 + width;
+        const width = 25;
+        // Row 1 - Left to Right
+        if (firstText1.current && secondText1.current) {
+            firstText1.current.position.x = (xPercent * width) / 100;
+            secondText1.current.position.x = (xPercent * width) / 100 + width;
+        }
+        // Row 2 - Right to Left
+        if (firstText2.current && secondText2.current) {
+            firstText2.current.position.x = (-xPercent * width) / 100;
+            secondText2.current.position.x = (-xPercent * width) / 100 + width;
+        }
+        // Row 3 - Left to Right
+        if (firstText3.current && secondText3.current) {
+            firstText3.current.position.x = (xPercent * width) / 100;
+            secondText3.current.position.x = (xPercent * width) / 100 + width;
         }
         
         requestAnimationFrame(animate);
-        xPercent += 0.75; // Slightly faster for smoother appearance
+        xPercent += 0.3; // Slower speed
     }
 
     useFrame(() => {
@@ -68,27 +86,41 @@ export default function GlassModel() {
 
     return (
         <group scale={viewport.width / 3.75}>
-            {/* Scrolling Text */}
-            <group position={[0, 0, -2]} ref={slider}>
-                <group ref={firstText}>
-                    <Text 
-                        font={'/fonts/PPNeueMontreal-Bold.otf'} 
-                        fontSize={0.8}
-                        color="white"
-                        anchorX="left"
-                        anchorY="middle"
-                    >
+            {/* Scrolling Text - Three Rows */}
+            <group position={[0, 1, -2]}>
+                <group ref={firstText1}>
+                    <Text fontSize={0.8} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'}>
                         Transforming Ideas into Digital Excellence •
                     </Text>
                 </group>
-                <group ref={secondText}>
-                    <Text 
-                        font={'/fonts/PPNeueMontreal-Bold.otf'} 
-                        fontSize={0.8}
-                        color="white"
-                        anchorX="left"
-                        anchorY="middle"
-                    >
+                <group ref={secondText1}>
+                    <Text fontSize={0.8} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'}>
+                        Transforming Ideas into Digital Excellence •
+                    </Text>
+                </group>
+            </group>
+
+            <group position={[0, 0, -2]}>
+                <group ref={firstText2}>
+                    <Text fontSize={0.8} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'}>
+                        Transforming Ideas into Digital Excellence •
+                    </Text>
+                </group>
+                <group ref={secondText2}>
+                    <Text fontSize={0.8} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'}>
+                        Transforming Ideas into Digital Excellence •
+                    </Text>
+                </group>
+            </group>
+
+            <group position={[0, -1, -2]}>
+                <group ref={firstText3}>
+                    <Text fontSize={0.8} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'}>
+                        Transforming Ideas into Digital Excellence •
+                    </Text>
+                </group>
+                <group ref={secondText3}>
+                    <Text fontSize={0.8} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'}>
                         Transforming Ideas into Digital Excellence •
                     </Text>
                 </group>
