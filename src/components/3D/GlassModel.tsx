@@ -74,7 +74,13 @@ export default function GlassModel() {
             transmission: { value: 1, min: 0, max: 1, step: 0.1 },
             ior: { value: 1.2, min: 0, max: 3, step: 0.1 },
             chromaticAberration: { value: 0.02, min: 0, max: 1 },
-            backside: { value: true }
+            backside: { value: true },
+            samples: { value: 16, min: 1, max: 32, step: 1 },
+            resolution: { value: 512, min: 256, max: 1024, step: 128 },
+            anisotropy: { value: 1, min: 0, max: 10, step: 0.1 },
+            distortion: { value: 0.5, min: 0, max: 1, step: 0.1 },
+            distortionScale: { value: 0.5, min: 0, max: 1, step: 0.1 },
+            temporalDistortion: { value: 0.1, min: 0, max: 1, step: 0.1 }
         }
     );
 
@@ -238,7 +244,7 @@ export default function GlassModel() {
                     rotation={mesh.rotation}
                     scale={mesh.scale}
                 >
-                    <MeshTransmissionMaterial {...materialProps}/>
+                    <MeshTransmissionMaterial {...materialProps} />
                 </mesh>
             ))}
 
