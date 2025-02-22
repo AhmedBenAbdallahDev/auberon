@@ -66,7 +66,7 @@ export default function GlassModel() {
         }
         
         requestAnimationFrame(animate);
-        xPercent += 0.3; // Slower speed
+        xPercent += 0.08; // Much slower speed
     }
 
     useFrame(() => {
