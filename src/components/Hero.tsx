@@ -1,7 +1,6 @@
 'use client';
 import { Spotlight } from "./ui/Spotlight";
 import HeroContent from "./ui/HeroContent";
-import ScrollingText from "./ScrollingText";
 import dynamic from 'next/dynamic';
 
 const Scene3D = dynamic(() => import('./3D/Scene3D'), {
@@ -20,11 +19,10 @@ export default function Hero() {
                 className="-top-40 left-20 md:left-80 md:-top-20"
                 fill="blue"
             />
-            <div className="absolute inset-0 z-20">
+            <HeroContent />
+            <div className="absolute inset-0 z-0">
                 <Scene3D />
             </div>
-            <ScrollingText />
-            <HeroContent />
         </div>
     );
 }
