@@ -8,7 +8,7 @@ import clsx from 'clsx';
 
 const menu = {
     open: {
-        width: "88vw",
+        width: "380px",
         height: "75vh",
         top: "-25px",
         right: "-25px",
