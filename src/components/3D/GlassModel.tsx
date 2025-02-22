@@ -3,8 +3,9 @@ import React, { useRef, useEffect } from 'react'
 import { MeshTransmissionMaterial, useGLTF, Text } from "@react-three/drei";
 import { useFrame, useThree } from '@react-three/fiber'
 import { useControls } from 'leva'
-import { Mesh, Object3D, Group } from 'three'
+import { Mesh, Group } from 'three'
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 type GLTFResult = {
   nodes: {
@@ -19,45 +20,68 @@ export default function GlassModel() {
     const { viewport } = useThree()
     const torus = useRef<Mesh>(null);
     
-    // Text animation refs
+    // Text refs
+    const slider1 = useRef<Group>(null);
     const firstText1 = useRef<Group>(null);
     const secondText1 = useRef<Group>(null);
+    
+    const slider2 = useRef<Group>(null);
     const firstText2 = useRef<Group>(null);
     const secondText2 = useRef<Group>(null);
+    
+    const slider3 = useRef<Group>(null);
     const firstText3 = useRef<Group>(null);
     const secondText3 = useRef<Group>(null);
 
     let xPercent = 0;
     let direction = -1;
 
+    useEffect(() => {
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Set up scroll trigger for each row
+        [slider1, slider2, slider3].forEach((slider, i) => {
+            if (slider.current) {
+                gsap.to(slider.current.position, {
+                    scrollTrigger: {
+                        trigger: document.documentElement,
+                        scrub: 0.5,
+                        start: 0,
+                        end: window.innerHeight,
+                        onUpdate: e => direction = e.direction * -1 * (i % 2 ? -1 : 1)
+                    },
+                    x: i % 2 ? "500px" : "-500px",
+                });
+            }
+        });
+
+        requestAnimationFrame(animate);
+    }, []);
+
     const animate = () => {
-        if (xPercent <= -100) {
+        if (xPercent < -100) {
             xPercent = 0;
         }
-        if (xPercent > 0) {
+        else if (xPercent > 0) {
             xPercent = -100;
         }
-        
-        if (firstText1.current && secondText1.current) {
-            gsap.set(firstText1.current.position, { x: xPercent * 0.3 });
-            gsap.set(secondText1.current.position, { x: xPercent * 0.3 });
-        }
-        if (firstText2.current && secondText2.current) {
-            gsap.set(firstText2.current.position, { x: -xPercent * 0.3 });
-            gsap.set(secondText2.current.position, { x: -xPercent * 0.3 });
-        }
-        if (firstText3.current && secondText3.current) {
-            gsap.set(firstText3.current.position, { x: xPercent * 0.3 });
-            gsap.set(secondText3.current.position, { x: xPercent * 0.3 });
-        }
-        
+
+        // Update each row's text positions
+        [
+            [firstText1, secondText1],
+            [firstText2, secondText2],
+            [firstText3, secondText3]
+        ].forEach(([first, second], i) => {
+            if (first.current && second.current) {
+                const dir = i % 2 ? -1 : 1;
+                gsap.set(first.current.position, { x: xPercent * dir });
+                gsap.set(second.current.position, { x: xPercent * dir });
+            }
+        });
+
         requestAnimationFrame(animate);
         xPercent += 0.1 * direction;
     }
-
-    useEffect(() => {
-        requestAnimationFrame(animate);
-    }, []);
 
     useFrame(() => {
         if (torus.current) {
@@ -79,13 +103,13 @@ export default function GlassModel() {
     return (
         <group scale={viewport.width / 3.75}>
             {/* Row 1 */}
-            <group position={[0, 0.6, -1]}>
+            <group position={[0, 0.6, -1]} ref={slider1}>
                 <group ref={firstText1}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
                 </group>
-                <group ref={secondText1} position={[15, 0, 0]}>
+                <group ref={secondText1} position={[20, 0, 0]}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
@@ -93,13 +117,13 @@ export default function GlassModel() {
             </group>
 
             {/* Row 2 */}
-            <group position={[0, 0, -1]}>
+            <group position={[0, 0, -1]} ref={slider2}>
                 <group ref={firstText2}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
                 </group>
-                <group ref={secondText2} position={[15, 0, 0]}>
+                <group ref={secondText2} position={[20, 0, 0]}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
@@ -107,13 +131,13 @@ export default function GlassModel() {
             </group>
 
             {/* Row 3 */}
-            <group position={[0, -0.6, -1]}>
+            <group position={[0, -0.6, -1]} ref={slider3}>
                 <group ref={firstText3}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
                 </group>
-                <group ref={secondText3} position={[15, 0, 0]}>
+                <group ref={secondText3} position={[20, 0, 0]}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
