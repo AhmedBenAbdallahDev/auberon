@@ -9,7 +9,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 
 type GLTFResult = {
   nodes: {
-    Torus002: Mesh
+    [key: string]: Mesh
   }
 }
 
@@ -18,7 +18,7 @@ useGLTF.preload("/medias/torrus.glb")
 export default function GlassModel() {
     const { nodes } = useGLTF("/medias/torrus.glb") as unknown as GLTFResult;
     const { viewport } = useThree()
-    const torus = useRef<Mesh>(null);
+    const meshRefs = useRef<Mesh[]>([]);
     
     // Add mouse movement tracking
     const mouseSpeed = useRef(0);
@@ -215,13 +215,33 @@ export default function GlassModel() {
     }, []);
 
     useFrame(() => {
-        if (torus.current) {
-            torus.current.rotation.x += 0.02;
-        }
+        // Animate all meshes
+        meshRefs.current.forEach((mesh) => {
+            if (mesh) {
+                mesh.rotation.x += 0.02;
+                mesh.rotation.y += 0.01;
+            }
+        });
     });
 
     return (
         <group scale={viewport.width / 3.75}>
+            {/* Render all meshes from the model */}
+            {Object.entries(nodes).map(([name, mesh], index) => (
+                <mesh
+                    key={name}
+                    ref={(el) => {
+                        if (el) meshRefs.current[index] = el;
+                    }}
+                    geometry={mesh.geometry}
+                    position={mesh.position}
+                    rotation={mesh.rotation}
+                    scale={mesh.scale}
+                >
+                    <MeshTransmissionMaterial {...materialProps}/>
+                </mesh>
+            ))}
+
             {/* First set of scrolling text */}
             <group position={[-10, verticalGap, -2]}>
                 <group ref={firstText1}>
@@ -301,11 +321,6 @@ export default function GlassModel() {
                     </Text>
                 </group>
             </group>
-
-            {/* 3D Model */}
-            <mesh ref={torus} {...nodes.Torus002}>
-                <MeshTransmissionMaterial {...materialProps}/>
-            </mesh>
         </group>
     )
 } 
