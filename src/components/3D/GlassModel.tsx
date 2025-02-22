@@ -5,6 +5,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useControls, LevaPanel } from 'leva'
 import { Mesh, Group } from 'three'
 import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 
 type GLTFResult = {
   nodes: {
@@ -19,20 +20,37 @@ export default function GlassModel() {
     const { viewport } = useThree()
     const torus = useRef<Mesh>(null);
     
-    // Row 1
+    // Add mouse movement tracking
+    const mouseSpeed = useRef(0);
+    const lastMouseX = useRef(0);
+    const lastMouseY = useRef(0);
+    const baseSpeed = useRef(0.02);
+
+    // Speed multipliers for each line
+    const speedMultipliers = {
+        line1: 1,    // Base speed
+        line2: 1.5,  // 50% faster than line 1
+        line3: 2     // 100% faster than line 1
+    };
+
+    // First set of rows
     const firstText1 = useRef<Group>(null);
     const secondText1 = useRef<Group>(null);
-    const thirdText1 = useRef<Group>(null);
-    // Row 2
     const firstText2 = useRef<Group>(null);
     const secondText2 = useRef<Group>(null);
-    const thirdText2 = useRef<Group>(null);
-    // Row 3
     const firstText3 = useRef<Group>(null);
     const secondText3 = useRef<Group>(null);
-    const thirdText3 = useRef<Group>(null);
+
+    // Second set of rows (offset)
+    const offsetText1 = useRef<Group>(null);
+    const offsetText2 = useRef<Group>(null);
+    const offsetText3 = useRef<Group>(null);
+    const offsetText1b = useRef<Group>(null);
+    const offsetText2b = useRef<Group>(null);
+    const offsetText3b = useRef<Group>(null);
 
     let xPercent = 0;
+    let direction = -1;
     let animationFrameId: number;
 
     // Create a store for the panel
@@ -46,12 +64,27 @@ export default function GlassModel() {
         return () => window.removeEventListener('keydown', handleKeyPress);
     }, []);
 
-    // Add the controls to the panel
-    const { speed, width, verticalGap, fontSize } = useControls(
+    useEffect(() => {
+        const handleMouseMove = (event: MouseEvent) => {
+            const dx = event.clientX - lastMouseX.current;
+            const dy = event.clientY - lastMouseY.current;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Update mouse speed with smooth interpolation - reduced sensitivity from 0.01 to 0.005
+            mouseSpeed.current = Math.min(Math.max(distance * 0.005, 0.02), 0.5);
+            
+            lastMouseX.current = event.clientX;
+            lastMouseY.current = event.clientY;
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
+    // Remove the speed controls from useControls since we'll control it with mouse
+    const { verticalGap, fontSize } = useControls(
         'Text Controls',
         {
-            speed: { value: 0.08, min: 0.01, max: 1, step: 0.01, label: 'Speed' },
-            width: { value: 12, min: 5, max: 30, step: 0.1, label: 'Text Spacing' },
             verticalGap: { value: 0.8, min: 0.1, max: 2, step: 0.1, label: 'Vertical Gap' },
             fontSize: { value: 0.8, min: 0.2, max: 2, step: 0.1, label: 'Font Size' }
         }
@@ -69,6 +102,13 @@ export default function GlassModel() {
         }
     );
 
+    // Track separate positions for each line
+    const positions = useRef({
+        line1: 0,
+        line2: 0,
+        line3: 0
+    });
+
     // Add Leva panel visibility control
     useEffect(() => {
         const style = document.createElement('style');
@@ -84,59 +124,94 @@ export default function GlassModel() {
     }, [show]);
 
     const animate = () => {
-        // Get the actual width of the text
-        const textWidth = 20;
+        // Calculate base speed from mouse movement
+        baseSpeed.current += (mouseSpeed.current - baseSpeed.current) * 0.1;
         
-        // Reset when first text moves completely off screen
-        if (xPercent >= textWidth) {
-            xPercent = 0;
+        // Update positions for each line using multipliers
+        positions.current.line1 = positions.current.line1 + (baseSpeed.current * speedMultipliers.line1);
+        positions.current.line2 = positions.current.line2 + (baseSpeed.current * speedMultipliers.line2);
+        positions.current.line3 = positions.current.line3 + (baseSpeed.current * speedMultipliers.line3);
+
+        // Reset positions when needed
+        if(positions.current.line1 > 0) positions.current.line1 = -100;
+        if(positions.current.line2 > 0) positions.current.line2 = -100;
+        if(positions.current.line3 > 0) positions.current.line3 = -100;
+
+        // Animate first set - each line with its own speed
+        if (firstText1.current && secondText1.current) {
+            firstText1.current.position.x = positions.current.line1 / 5;
+            secondText1.current.position.x = positions.current.line1 / 5 + 20;
         }
-        
-        [
-            [firstText1, secondText1, thirdText1],
-            [firstText2, secondText2, thirdText2],
-            [firstText3, secondText3, thirdText3]
-        ].forEach(([first, second, third]) => {
-            if (first.current && second.current && third.current) {
-                // Position three texts back to back
-                first.current.position.x = -2 * textWidth + xPercent;
-                second.current.position.x = -textWidth + xPercent;
-                third.current.position.x = xPercent;
-            }
-        });
-        
-        xPercent += speed;
+        if (firstText2.current && secondText2.current) {
+            firstText2.current.position.x = positions.current.line2 / 5;
+            secondText2.current.position.x = positions.current.line2 / 5 + 20;
+        }
+        if (firstText3.current && secondText3.current) {
+            firstText3.current.position.x = positions.current.line3 / 5;
+            secondText3.current.position.x = positions.current.line3 / 5 + 20;
+        }
+
+        // Animate offset set - each line with its own speed
+        if (offsetText1.current && offsetText1b.current) {
+            offsetText1.current.position.x = positions.current.line1 / 5 + 10;
+            offsetText1b.current.position.x = positions.current.line1 / 5 + 30;
+        }
+        if (offsetText2.current && offsetText2b.current) {
+            offsetText2.current.position.x = positions.current.line2 / 5 + 10;
+            offsetText2b.current.position.x = positions.current.line2 / 5 + 30;
+        }
+        if (offsetText3.current && offsetText3b.current) {
+            offsetText3.current.position.x = positions.current.line3 / 5 + 10;
+            offsetText3b.current.position.x = positions.current.line3 / 5 + 30;
+        }
+
         animationFrameId = requestAnimationFrame(animate);
     };
 
-    // Combined effect for animation setup and cleanup
     useEffect(() => {
-        // Initial setup - position texts
-        xPercent = 0;
-        const textWidth = 20;
-        
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Set up initial positions
+        positions.current = {
+            line1: -100,
+            line2: -100,
+            line3: -100
+        };
+
+        // Set up initial positions for first set
         [
-            [firstText1, secondText1, thirdText1],
-            [firstText2, secondText2, thirdText2],
-            [firstText3, secondText3, thirdText3]
-        ].forEach(([first, second, third]) => {
-            if (first.current && second.current && third.current) {
-                first.current.position.x = -2 * textWidth;
-                second.current.position.x = -textWidth;
-                third.current.position.x = 0;
+            [firstText1, secondText1],
+            [firstText2, secondText2],
+            [firstText3, secondText3]
+        ].forEach(([first, second]) => {
+            if (first.current && second.current) {
+                first.current.position.x = 0;
+                second.current.position.x = 20;
             }
         });
-        
+
+        // Set up initial positions for offset set
+        [
+            [offsetText1, offsetText1b],
+            [offsetText2, offsetText2b],
+            [offsetText3, offsetText3b]
+        ].forEach(([first, second]) => {
+            if (first.current && second.current) {
+                first.current.position.x = 10;
+                second.current.position.x = 30;
+            }
+        });
+
         // Start animation
-        animate();
-        
-        // Cleanup
+        requestAnimationFrame(animate);
+
         return () => {
             if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
             }
         };
-    }, [speed]);
+    }, []);
 
     useFrame(() => {
         if (torus.current) {
@@ -146,21 +221,16 @@ export default function GlassModel() {
 
     return (
         <group scale={viewport.width / 3.75}>
-            {/* Scrolling Text - Three Rows */}
+            {/* First set of scrolling text */}
             <group position={[-10, verticalGap, -2]}>
                 <group ref={firstText1}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
+                        Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={secondText1}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
-                    </Text>
-                </group>
-                <group ref={thirdText1}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
+                        Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
             </group>
@@ -168,17 +238,12 @@ export default function GlassModel() {
             <group position={[-10, 0, -2]}>
                 <group ref={firstText2}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
+                        Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={secondText2}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
-                    </Text>
-                </group>
-                <group ref={thirdText2}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
+                        Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
             </group>
@@ -186,17 +251,52 @@ export default function GlassModel() {
             <group position={[-10, -verticalGap, -2]}>
                 <group ref={firstText3}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
+                        Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={secondText3}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
+                        Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
-                <group ref={thirdText3}>
+            </group>
+
+            {/* Second set of scrolling text (offset) */}
+            <group position={[-10, verticalGap, -2]}>
+                <group ref={offsetText1}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
-                        Transforming Ideas into Digital Excellence •
+                        Transforming Ideas into Digital Excellence • 
+                    </Text>
+                </group>
+                <group ref={offsetText1b}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                        Transforming Ideas into Digital Excellence • 
+                    </Text>
+                </group>
+            </group>
+
+            <group position={[-10, 0, -2]}>
+                <group ref={offsetText2}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                        Transforming Ideas into Digital Excellence • 
+                    </Text>
+                </group>
+                <group ref={offsetText2b}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                        Transforming Ideas into Digital Excellence • 
+                    </Text>
+                </group>
+            </group>
+
+            <group position={[-10, -verticalGap, -2]}>
+                <group ref={offsetText3}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                        Transforming Ideas into Digital Excellence • 
+                    </Text>
+                </group>
+                <group ref={offsetText3b}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                        Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
             </group>
