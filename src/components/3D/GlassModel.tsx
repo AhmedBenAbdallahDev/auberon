@@ -28,9 +28,9 @@ export default function GlassModel() {
 
     // Speed multipliers for each line
     const speedMultipliers = {
-        line1: 1,    // Base speed
-        line2: 1.5,  // 50% faster than line 1
-        line3: 2     // 100% faster than line 1
+        line1: 0.8,    // 20% slower than base
+        line2: 1.6,    // 60% faster than line 1
+        line3: 2.4     // 140% faster than line 1
     };
 
     // First set of rows
