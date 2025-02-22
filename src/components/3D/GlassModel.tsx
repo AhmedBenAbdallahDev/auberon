@@ -18,37 +18,45 @@ export default function GlassModel() {
     const { nodes } = useGLTF("/medias/torrus.glb") as unknown as GLTFResult;
     const { viewport } = useThree()
     const torus = useRef<Mesh>(null);
-    const row1 = useRef<Group>(null);
-    const row2 = useRef<Group>(null);
-    const row3 = useRef<Group>(null);
-    const slider1 = useRef<Group>(null);
-    const slider2 = useRef<Group>(null);
-    const slider3 = useRef<Group>(null);
     
-    useEffect(() => {
-        if (slider1.current && slider2.current && slider3.current) {
-            // Infinite scroll animation for each row
-            gsap.to(slider1.current.position, {
-                x: -30,
-                duration: 20,
-                repeat: -1,
-                ease: "none",
-            });
-            
-            gsap.to(slider2.current.position, {
-                x: 30,
-                duration: 20,
-                repeat: -1,
-                ease: "none",
-            });
-            
-            gsap.to(slider3.current.position, {
-                x: -30,
-                duration: 20,
-                repeat: -1,
-                ease: "none",
-            });
+    // Text animation refs
+    const firstText1 = useRef<Group>(null);
+    const secondText1 = useRef<Group>(null);
+    const firstText2 = useRef<Group>(null);
+    const secondText2 = useRef<Group>(null);
+    const firstText3 = useRef<Group>(null);
+    const secondText3 = useRef<Group>(null);
+
+    let xPercent = 0;
+    let direction = -1;
+
+    const animate = () => {
+        if (xPercent <= -100) {
+            xPercent = 0;
         }
+        if (xPercent > 0) {
+            xPercent = -100;
+        }
+        
+        if (firstText1.current && secondText1.current) {
+            gsap.set(firstText1.current.position, { x: xPercent * 0.3 });
+            gsap.set(secondText1.current.position, { x: xPercent * 0.3 });
+        }
+        if (firstText2.current && secondText2.current) {
+            gsap.set(firstText2.current.position, { x: -xPercent * 0.3 });
+            gsap.set(secondText2.current.position, { x: -xPercent * 0.3 });
+        }
+        if (firstText3.current && secondText3.current) {
+            gsap.set(firstText3.current.position, { x: xPercent * 0.3 });
+            gsap.set(secondText3.current.position, { x: xPercent * 0.3 });
+        }
+        
+        requestAnimationFrame(animate);
+        xPercent += 0.1 * direction;
+    }
+
+    useEffect(() => {
+        requestAnimationFrame(animate);
     }, []);
 
     useFrame(() => {
@@ -66,43 +74,58 @@ export default function GlassModel() {
         backside: { value: true},
     }, { hidden: true })
 
-    const textContent = "Transforming Ideas into Digital Excellence • ".repeat(3);
+    const textContent = "Transforming Ideas into Digital Excellence • ";
     
     return (
         <group scale={viewport.width / 3.75}>
-            <group position={[0, 0.6, -1]} ref={row1}>
-                <group ref={slider1} position={[0, 0, 0]}>
+            {/* Row 1 */}
+            <group position={[0, 0.6, -1]}>
+                <group ref={firstText1}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle" position={[30, 0, 0]}>
+                </group>
+                <group ref={secondText1} position={[15, 0, 0]}>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
                 </group>
             </group>
-            <group position={[0, 0, -1]} ref={row2}>
-                <group ref={slider2} position={[0, 0, 0]}>
+
+            {/* Row 2 */}
+            <group position={[0, 0, -1]}>
+                <group ref={firstText2}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle" position={[30, 0, 0]}>
+                </group>
+                <group ref={secondText2} position={[15, 0, 0]}>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
                 </group>
             </group>
-            <group position={[0, -0.6, -1]} ref={row3}>
-                <group ref={slider3} position={[0, 0, 0]}>
+
+            {/* Row 3 */}
+            <group position={[0, -0.6, -1]}>
+                <group ref={firstText3}>
                     <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
-                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle" position={[30, 0, 0]}>
+                </group>
+                <group ref={secondText3} position={[15, 0, 0]}>
+                    <Text font={'/fonts/PPNeueMontreal-Bold.otf'} fontSize={0.4} color="white" anchorX="left" anchorY="middle">
                         {textContent}
                     </Text>
                 </group>
             </group>
-            <mesh ref={torus} {...nodes.Torus002}>
-                <MeshTransmissionMaterial {...materialProps}/>
-            </mesh>
+
+            {/* 3D Model */}
+            {nodes?.Torus002 && (
+                <mesh ref={torus} {...nodes.Torus002}>
+                    <MeshTransmissionMaterial {...materialProps}/>
+                </mesh>
+            )}
         </group>
     )
 } 
