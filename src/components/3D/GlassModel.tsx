@@ -19,7 +19,6 @@ export default function GlassModel() {
     const { nodes } = useGLTF("/medias/torrus.glb") as unknown as GLTFResult;
     const { viewport } = useThree()
     const torus = useRef<Mesh>(null);
-    const slider = useRef<Group>(null);
     const firstText = useRef<Group>(null);
     const secondText = useRef<Group>(null);
 
@@ -28,36 +27,24 @@ export default function GlassModel() {
 
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
-        
-        gsap.to(slider.current?.position || {}, {
-            scrollTrigger: {
-                trigger: document.documentElement,
-                scrub: 0.5,
-                start: 0,
-                end: window.innerHeight,
-                onUpdate: e => direction = e.direction * -1
-            },
-            x: "-500px",
-        });
-
         requestAnimationFrame(animate);
     }, []);
 
     const animate = () => {
-        if (xPercent < -100) {
+        if (xPercent <= -100) {
             xPercent = 0;
         }
-        else if (xPercent > 0) {
+        if (xPercent > 0) {
             xPercent = -100;
         }
-
+        
         if (firstText.current && secondText.current) {
-            gsap.set(firstText.current.position, { x: xPercent * 0.2 });
-            gsap.set(secondText.current.position, { x: xPercent * 0.2 });
+            firstText.current.position.x = xPercent * 0.1;
+            secondText.current.position.x = xPercent * 0.1 + 20;
         }
-
+        
         requestAnimationFrame(animate);
-        xPercent += 0.5 * direction;
+        xPercent += 0.3;
     }
 
     useFrame(() => {
@@ -76,43 +63,37 @@ export default function GlassModel() {
     }, { hidden: true })
 
     return (
-        <>
-            {/* Text Layer */}
-            <group position={[0, -2, 0]}>
-                <group ref={slider} position={[0, 0, 0]}>
-                    <group ref={firstText} position={[-viewport.width/2, 0, 0]}>
-                        <Text 
-                            font={'/fonts/PPNeueMontreal-Bold.otf'} 
-                            fontSize={1} 
-                            color="white" 
-                            anchorX="left" 
-                            anchorY="middle"
-                            letterSpacing={-0.05}
-                        >
-                            Transforming Ideas into Digital Excellence •
-                        </Text>
-                    </group>
-                    <group ref={secondText} position={[viewport.width/2, 0, 0]}>
-                        <Text 
-                            font={'/fonts/PPNeueMontreal-Bold.otf'} 
-                            fontSize={1} 
-                            color="white" 
-                            anchorX="left" 
-                            anchorY="middle"
-                            letterSpacing={-0.05}
-                        >
-                            Transforming Ideas into Digital Excellence •
-                        </Text>
-                    </group>
+        <group scale={viewport.width / 3.75}>
+            {/* 3D Model */}
+            <mesh ref={torus} {...nodes.Torus002}>
+                <MeshTransmissionMaterial {...materialProps}/>
+            </mesh>
+
+            {/* Scrolling Text */}
+            <group position={[0, -2, -1]}>
+                <group ref={firstText}>
+                    <Text 
+                        font={'/fonts/PPNeueMontreal-Bold.otf'} 
+                        fontSize={0.8}
+                        color="white"
+                        anchorX="left"
+                        anchorY="middle"
+                    >
+                        Transforming Ideas into Digital Excellence •
+                    </Text>
+                </group>
+                <group ref={secondText} position={[20, 0, 0]}>
+                    <Text 
+                        font={'/fonts/PPNeueMontreal-Bold.otf'} 
+                        fontSize={0.8}
+                        color="white"
+                        anchorX="left"
+                        anchorY="middle"
+                    >
+                        Transforming Ideas into Digital Excellence •
+                    </Text>
                 </group>
             </group>
-
-            {/* 3D Model Layer */}
-            <group scale={viewport.width / 3.75}>
-                <mesh ref={torus} {...nodes.Torus002}>
-                    <MeshTransmissionMaterial {...materialProps}/>
-                </mesh>
-            </group>
-        </>
+        </group>
     )
 } 
