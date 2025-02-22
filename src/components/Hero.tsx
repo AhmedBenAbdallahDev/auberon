@@ -20,11 +20,11 @@ export default function Hero() {
                 className="-top-40 left-20 md:left-80 md:-top-20"
                 fill="blue"
             />
-            <HeroContent />
-            <ScrollingText />
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-20">
                 <Scene3D />
             </div>
+            <ScrollingText />
+            <HeroContent />
         </div>
     );
 }

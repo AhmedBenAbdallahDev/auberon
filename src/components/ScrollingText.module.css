@@ -2,6 +2,8 @@
     position: absolute;
     top: calc(100vh - 350px);
     z-index: 10;
+    width: 100%;
+    overflow: hidden;
 }
 
 .slider {
@@ -16,6 +18,8 @@
     font-size: 8vw;
     font-weight: 500;
     padding-right: 50px;
+    opacity: 0.8;
+    mix-blend-mode: difference;
 }
 
 .slider p:nth-of-type(2) {
