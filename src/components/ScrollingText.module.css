@@ -1,0 +1,25 @@
+.sliderContainer {
+    position: absolute;
+    top: calc(100vh - 350px);
+    z-index: 10;
+}
+
+.slider {
+    position: relative;
+    white-space: nowrap;
+}
+
+.slider p {
+    position: relative;
+    margin: 0;
+    color: white;
+    font-size: 8vw;
+    font-weight: 500;
+    padding-right: 50px;
+}
+
+.slider p:nth-of-type(2) {
+    position: absolute;
+    left: 100%;
+    top: 0;
+} 
