@@ -32,8 +32,8 @@ export default function GlassModel() {
     let xPercent = 0;
 
     useEffect(() => {
-        // Initial setup - position second texts
-        const width = 25;
+        // Initial setup - position second texts right after first texts
+        const width = 15; // Reduced width for tighter spacing
         if (secondText1.current) secondText1.current.position.x = width;
         if (secondText2.current) secondText2.current.position.x = width;
         if (secondText3.current) secondText3.current.position.x = width;
@@ -48,25 +48,21 @@ export default function GlassModel() {
             xPercent = -100;
         }
         
-        const width = 25;
-        // Row 1 - Left to Right
-        if (firstText1.current && secondText1.current) {
-            firstText1.current.position.x = (xPercent * width) / 100;
-            secondText1.current.position.x = (xPercent * width) / 100 + width;
-        }
-        // Row 2 - Right to Left
-        if (firstText2.current && secondText2.current) {
-            firstText2.current.position.x = (-xPercent * width) / 100;
-            secondText2.current.position.x = (-xPercent * width) / 100 + width;
-        }
-        // Row 3 - Left to Right
-        if (firstText3.current && secondText3.current) {
-            firstText3.current.position.x = (xPercent * width) / 100;
-            secondText3.current.position.x = (xPercent * width) / 100 + width;
-        }
+        const width = 15; // Reduced width for tighter spacing
+        // All rows moving same direction
+        [
+            [firstText1, secondText1],
+            [firstText2, secondText2],
+            [firstText3, secondText3]
+        ].forEach(([first, second]) => {
+            if (first.current && second.current) {
+                first.current.position.x = (xPercent * width) / 100;
+                second.current.position.x = (xPercent * width) / 100 + width;
+            }
+        });
         
         requestAnimationFrame(animate);
-        xPercent += 0.08; // Much slower speed
+        xPercent += 0.08;
     }
 
     useFrame(() => {
@@ -87,7 +83,7 @@ export default function GlassModel() {
     return (
         <group scale={viewport.width / 3.75}>
             {/* Scrolling Text - Three Rows */}
-            <group position={[0, 1, -2]}>
+            <group position={[0, 0.8, -2]}>
                 <group ref={firstText1}>
                     <Text fontSize={0.8} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'}>
                         Transforming Ideas into Digital Excellence •
@@ -113,7 +109,7 @@ export default function GlassModel() {
                 </group>
             </group>
 
-            <group position={[0, -1, -2]}>
+            <group position={[0, -0.8, -2]}>
                 <group ref={firstText3}>
                     <Text fontSize={0.8} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'}>
                         Transforming Ideas into Digital Excellence •
