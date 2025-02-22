@@ -61,7 +61,7 @@ export default function GlassModel() {
         'Text Controls',
         {
             verticalGap: { value: 0.8, min: 0.1, max: 2, step: 0.1, label: 'Vertical Gap' },
-            fontSize: { value: 0.8, min: 0.2, max: 2, step: 0.01, label: 'Font Size' },
+            fontSize: { value: 0.43, min: 0.2, max: 2, step: 0.01, label: 'Font Size' },
             defaultSpeed: { value: 0.02, min: 0.001, max: 0.1, step: 0.001, label: 'Default Speed' }
         }
     );
@@ -226,12 +226,12 @@ export default function GlassModel() {
             <group position={[-10, verticalGap, -2]}>
                 <group ref={firstText1}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
                 <group ref={secondText1}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
             </group>
@@ -239,12 +239,12 @@ export default function GlassModel() {
             <group position={[-10, 0, -2]}>
                 <group ref={firstText2}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
                 <group ref={secondText2}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
             </group>
@@ -252,12 +252,12 @@ export default function GlassModel() {
             <group position={[-10, -verticalGap, -2]}>
                 <group ref={firstText3}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
                 <group ref={secondText3}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
             </group>
@@ -266,12 +266,12 @@ export default function GlassModel() {
             <group position={[-10, verticalGap, -2]}>
                 <group ref={offsetText1}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
                 <group ref={offsetText1b}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
             </group>
@@ -279,12 +279,12 @@ export default function GlassModel() {
             <group position={[-10, 0, -2]}>
                 <group ref={offsetText2}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
                 <group ref={offsetText2b}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
             </group>
@@ -292,12 +292,12 @@ export default function GlassModel() {
             <group position={[-10, -verticalGap, -2]}>
                 <group ref={offsetText3}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
                 <group ref={offsetText3b}>
                     <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence • 
+                        Transforming Ideas into Digital Excellence ✨ 
                     </Text>
                 </group>
             </group>
