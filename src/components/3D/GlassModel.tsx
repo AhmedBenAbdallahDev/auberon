@@ -23,15 +23,17 @@ export default function GlassModel() {
     const secondText = useRef<Group>(null);
 
     let xPercent = 0;
-    let direction = -1;
 
     useEffect(() => {
-        gsap.registerPlugin(ScrollTrigger);
+        // Set second text to start at the end of first text
+        if (secondText.current) {
+            secondText.current.position.x = 15;
+        }
         requestAnimationFrame(animate);
     }, []);
 
     const animate = () => {
-        if (xPercent <= -100) {
+        if (xPercent < -100) {
             xPercent = 0;
         }
         if (xPercent > 0) {
@@ -39,12 +41,12 @@ export default function GlassModel() {
         }
         
         if (firstText.current && secondText.current) {
-            firstText.current.position.x = xPercent * 0.1;
-            secondText.current.position.x = xPercent * 0.1 + 20;
+            gsap.set(firstText.current.position, { x: xPercent * 0.15 });
+            gsap.set(secondText.current.position, { x: xPercent * 0.15 + 15 });
         }
         
         requestAnimationFrame(animate);
-        xPercent += 0.3;
+        xPercent += 0.5;
     }
 
     useFrame(() => {
@@ -77,7 +79,7 @@ export default function GlassModel() {
                         Transforming Ideas into Digital Excellence •
                     </Text>
                 </group>
-                <group ref={secondText} position={[20, 0, 0]}>
+                <group ref={secondText}>
                     <Text 
                         font={'/fonts/PPNeueMontreal-Bold.otf'} 
                         fontSize={0.8}
