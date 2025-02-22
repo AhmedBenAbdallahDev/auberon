@@ -56,37 +56,13 @@ export default function GlassModel() {
     // Create a store for the panel
     const [show, setShow] = React.useState(false);
 
-    useEffect(() => {
-        const handleKeyPress = (e: KeyboardEvent) => {
-            if (e.key === 'l') setShow(s => !s);
-        };
-        window.addEventListener('keydown', handleKeyPress);
-        return () => window.removeEventListener('keydown', handleKeyPress);
-    }, []);
-
-    useEffect(() => {
-        const handleMouseMove = (event: MouseEvent) => {
-            const dx = event.clientX - lastMouseX.current;
-            const dy = event.clientY - lastMouseY.current;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            // Update mouse speed with smooth interpolation - reduced sensitivity from 0.01 to 0.005
-            mouseSpeed.current = Math.min(Math.max(distance * 0.005, 0.02), 0.5);
-            
-            lastMouseX.current = event.clientX;
-            lastMouseY.current = event.clientY;
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
-
-    // Remove the speed controls from useControls since we'll control it with mouse
-    const { verticalGap, fontSize } = useControls(
+    // Add controls to the panel
+    const { verticalGap, fontSize, defaultSpeed } = useControls(
         'Text Controls',
         {
             verticalGap: { value: 0.8, min: 0.1, max: 2, step: 0.1, label: 'Vertical Gap' },
-            fontSize: { value: 0.8, min: 0.2, max: 2, step: 0.1, label: 'Font Size' }
+            fontSize: { value: 0.8, min: 0.2, max: 2, step: 0.01, label: 'Font Size' },
+            defaultSpeed: { value: 0.02, min: 0.001, max: 0.1, step: 0.001, label: 'Default Speed' }
         }
     );
 
@@ -101,6 +77,31 @@ export default function GlassModel() {
             backside: { value: true }
         }
     );
+
+    useEffect(() => {
+        const handleKeyPress = (e: KeyboardEvent) => {
+            if (e.key === 'l') setShow(s => !s);
+        };
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, []);
+
+    useEffect(() => {
+        const handleMouseMove = (event: MouseEvent) => {
+            const dx = event.clientX - lastMouseX.current;
+            const dy = event.clientY - lastMouseY.current;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Update mouse speed with smooth interpolation
+            mouseSpeed.current = Math.min(Math.max(distance * 0.005, defaultSpeed), 0.5);
+            
+            lastMouseX.current = event.clientX;
+            lastMouseY.current = event.clientY;
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, [defaultSpeed]);
 
     // Track separate positions for each line
     const positions = useRef({
@@ -124,8 +125,8 @@ export default function GlassModel() {
     }, [show]);
 
     const animate = () => {
-        // Calculate base speed from mouse movement
-        baseSpeed.current += (mouseSpeed.current - baseSpeed.current) * 0.1;
+        // Calculate base speed from mouse movement, using defaultSpeed as the minimum
+        baseSpeed.current += (Math.max(mouseSpeed.current, defaultSpeed) - baseSpeed.current) * 0.1;
         
         // Update positions for each line using multipliers
         positions.current.line1 = positions.current.line1 + (baseSpeed.current * speedMultipliers.line1);
@@ -224,12 +225,12 @@ export default function GlassModel() {
             {/* First set of scrolling text */}
             <group position={[-10, verticalGap, -2]}>
                 <group ref={firstText1}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={secondText1}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
@@ -237,12 +238,12 @@ export default function GlassModel() {
 
             <group position={[-10, 0, -2]}>
                 <group ref={firstText2}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={secondText2}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
@@ -250,12 +251,12 @@ export default function GlassModel() {
 
             <group position={[-10, -verticalGap, -2]}>
                 <group ref={firstText3}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={secondText3}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
@@ -264,12 +265,12 @@ export default function GlassModel() {
             {/* Second set of scrolling text (offset) */}
             <group position={[-10, verticalGap, -2]}>
                 <group ref={offsetText1}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={offsetText1b}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
@@ -277,12 +278,12 @@ export default function GlassModel() {
 
             <group position={[-10, 0, -2]}>
                 <group ref={offsetText2}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={offsetText2b}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
@@ -290,12 +291,12 @@ export default function GlassModel() {
 
             <group position={[-10, -verticalGap, -2]}>
                 <group ref={offsetText3}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
                 <group ref={offsetText3b}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={-0.15}>
+                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
                         Transforming Ideas into Digital Excellence • 
                     </Text>
                 </group>
