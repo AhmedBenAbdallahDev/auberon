@@ -64,13 +64,8 @@ export default function GlassModel() {
 
     return (
         <group scale={viewport.width / 3.75}>
-            {/* 3D Model */}
-            <mesh ref={torus} {...nodes.Torus002}>
-                <MeshTransmissionMaterial {...materialProps}/>
-            </mesh>
-
             {/* Scrolling Text */}
-            <group position={[0, -2, -1]}>
+            <group position={[0, 0, -2]}>
                 <group ref={firstText}>
                     <Text 
                         font={'/fonts/PPNeueMontreal-Bold.otf'} 
@@ -94,6 +89,11 @@ export default function GlassModel() {
                     </Text>
                 </group>
             </group>
+
+            {/* 3D Model */}
+            <mesh ref={torus} {...nodes.Torus002}>
+                <MeshTransmissionMaterial {...materialProps}/>
+            </mesh>
         </group>
     )
 } 
