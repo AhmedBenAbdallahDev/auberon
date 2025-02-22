@@ -5,7 +5,6 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { Mesh, Group } from 'three'
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 type GLTFResult = {
   nodes: {
@@ -19,34 +18,37 @@ export default function GlassModel() {
     const { nodes } = useGLTF("/medias/torrus.glb") as unknown as GLTFResult;
     const { viewport } = useThree()
     const torus = useRef<Mesh>(null);
+    const slider = useRef<Group>(null);
     const firstText = useRef<Group>(null);
     const secondText = useRef<Group>(null);
 
     let xPercent = 0;
 
     useEffect(() => {
-        // Set second text to start at the end of first text
-        if (secondText.current) {
-            secondText.current.position.x = 15;
+        // Initial setup - position second text at the width of first text
+        if (firstText.current && secondText.current) {
+            const width = 25; // Width of text + spacing
+            secondText.current.position.x = width;
         }
         requestAnimationFrame(animate);
     }, []);
 
     const animate = () => {
-        if (xPercent < -100) {
+        if (xPercent <= -100) {
             xPercent = 0;
         }
-        if (xPercent > 0) {
+        else if (xPercent > 0) {
             xPercent = -100;
         }
         
         if (firstText.current && secondText.current) {
-            gsap.set(firstText.current.position, { x: xPercent * 0.15 });
-            gsap.set(secondText.current.position, { x: xPercent * 0.15 + 15 });
+            const width = 25; // Width of text + spacing
+            firstText.current.position.x = (xPercent * width) / 100;
+            secondText.current.position.x = (xPercent * width) / 100 + width;
         }
         
         requestAnimationFrame(animate);
-        xPercent += 0.5;
+        xPercent += 0.75; // Slightly faster for smoother appearance
     }
 
     useFrame(() => {
@@ -67,7 +69,7 @@ export default function GlassModel() {
     return (
         <group scale={viewport.width / 3.75}>
             {/* Scrolling Text */}
-            <group position={[0, 0, -2]}>
+            <group position={[0, 0, -2]} ref={slider}>
                 <group ref={firstText}>
                     <Text 
                         font={'/fonts/PPNeueMontreal-Bold.otf'} 
