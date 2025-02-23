@@ -241,27 +241,30 @@ export default function GlassModel() {
     });
 
     return (
-        <group scale={(viewport.width / 3.75) * modelScale}>
-            {/* Render either the torus or custom model based on the toggle */}
-            {!useCustomMesh ? (
-                <mesh 
-                    ref={(el) => { if (el) meshRefs.current[0] = el; }}
-                    {...nodes.Torus002}
-                >
-                    <MeshTransmissionMaterial {...materialProps} />
-                </mesh>
-            ) : (
-                <>
-                    {Object.values(customModel.nodes).map((mesh, index) => (
-                        <mesh
-                            key={mesh.name}
-                            ref={(el) => { if (el) meshRefs.current[index] = el; }}
-                            geometry={mesh.geometry}
-                            material={mesh.material}
-                        />
-                    ))}
-                </>
-            )}
+        <group scale={viewport.width / 3.75}>
+            {/* Model group with separate zoom scale */}
+            <group scale={modelScale}>
+                {/* Render either the torus or custom model based on the toggle */}
+                {!useCustomMesh ? (
+                    <mesh 
+                        ref={(el) => { if (el) meshRefs.current[0] = el; }}
+                        {...nodes.Torus002}
+                    >
+                        <MeshTransmissionMaterial {...materialProps} />
+                    </mesh>
+                ) : (
+                    <>
+                        {Object.values(customModel.nodes).map((mesh, index) => (
+                            <mesh
+                                key={mesh.name}
+                                ref={(el) => { if (el) meshRefs.current[index] = el; }}
+                                geometry={mesh.geometry}
+                                material={mesh.material}
+                            />
+                        ))}
+                    </>
+                )}
+            </group>
 
             {/* First set of scrolling text */}
             <group position={[-10, verticalGap, -2]}>
