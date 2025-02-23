@@ -58,10 +58,11 @@ export default function GlassModel() {
     const [show, setShow] = React.useState(false);
 
     // Add model controls to the panel
-    const { useCustomMesh } = useControls(
+    const { useCustomMesh, modelScale } = useControls(
         'Model Controls',
         {
-            useCustomMesh: { value: false, label: 'Use Custom Model' }
+            useCustomMesh: { value: false, label: 'Use Custom Model' },
+            modelScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Zoom' }
         }
     );
 
@@ -84,8 +85,8 @@ export default function GlassModel() {
             ior: { value: 1.2, min: 0, max: 3, step: 0.1 },
             chromaticAberration: { value: 0.02, min: 0, max: 1 },
             backside: { value: true },
-            samples: { value: 16, min: 1, max: 32, step: 1 },
-            resolution: { value: 512, min: 256, max: 1024, step: 128 },
+            samples: { value: 3, min: 1, max: 32, step: 1 },
+            resolution: { value: 256, min: 256, max: 1024, step: 128 },
             anisotropy: { value: 1, min: 0, max: 10, step: 0.1 },
             distortion: { value: 0.5, min: 0, max: 1, step: 0.1 },
             distortionScale: { value: 0.5, min: 0, max: 1, step: 0.1 },
@@ -240,7 +241,7 @@ export default function GlassModel() {
     });
 
     return (
-        <group scale={viewport.width / 3.75}>
+        <group scale={(viewport.width / 3.75) * modelScale}>
             {/* Render either the torus or custom model based on the toggle */}
             {!useCustomMesh ? (
                 <mesh 
