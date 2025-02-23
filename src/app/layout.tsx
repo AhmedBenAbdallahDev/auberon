@@ -64,13 +64,13 @@ export const metadata: Metadata = {
     description: "Transforming Ideas into Digital Excellence. We craft innovative digital experiences through creative design and cutting-edge development.",
     images: [
       {
-        url: "/meta/og-image.jpg",
+        url: "/meta/og-image.png",
         width: 1200,
         height: 630,
         alt: "AUBERON Agency Preview",
       },
       {
-        url: "/meta/og-image-square.jpg",
+        url: "/meta/og-image-square.png",
         width: 600,
         height: 600,
         alt: "AUBERON Agency Square Preview",
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     title: "AUBERON Agency | Digital Excellence",
     description: "Transforming Ideas into Digital Excellence. We craft innovative digital experiences through creative design and cutting-edge development.",
     creator: "@auberon_agency",
-    images: ["/meta/twitter-image.jpg"],
+    images: ["/meta/twitter-image.png"],
   },
   other: {
     "msapplication-TileColor": "#0B0D21",

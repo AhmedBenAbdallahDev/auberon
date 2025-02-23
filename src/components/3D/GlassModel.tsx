@@ -17,6 +17,7 @@ useGLTF.preload("/medias/torrus.glb")
 
 export default function GlassModel() {
     const { nodes } = useGLTF("/medias/torrus.glb") as unknown as GLTFResult;
+    const customModel = useGLTF("/medias/model.glb") as unknown as GLTFResult;
     const { viewport } = useThree()
     const meshRefs = useRef<Mesh[]>([]);
     
@@ -55,6 +56,14 @@ export default function GlassModel() {
 
     // Create a store for the panel
     const [show, setShow] = React.useState(false);
+
+    // Add model controls to the panel
+    const { useCustomMesh } = useControls(
+        'Model Controls',
+        {
+            useCustomMesh: { value: false, label: 'Use Custom Model' }
+        }
+    );
 
     // Add controls to the panel
     const { verticalGap, fontSize, defaultSpeed } = useControls(
@@ -232,21 +241,26 @@ export default function GlassModel() {
 
     return (
         <group scale={viewport.width / 3.75}>
-            {/* Render all meshes from the model */}
-            {Object.entries(nodes).map(([name, mesh], index) => (
-                <mesh
-                    key={name}
-                    ref={(el) => {
-                        if (el) meshRefs.current[index] = el;
-                    }}
-                    geometry={mesh.geometry}
-                    position={mesh.position}
-                    rotation={mesh.rotation}
-                    scale={mesh.scale}
+            {/* Render either the torus or custom model based on the toggle */}
+            {!useCustomMesh ? (
+                <mesh 
+                    ref={(el) => { if (el) meshRefs.current[0] = el; }}
+                    {...nodes.Torus002}
                 >
                     <MeshTransmissionMaterial {...materialProps} />
                 </mesh>
-            ))}
+            ) : (
+                <>
+                    {Object.values(customModel.nodes).map((mesh, index) => (
+                        <mesh
+                            key={mesh.name}
+                            ref={(el) => { if (el) meshRefs.current[index] = el; }}
+                            geometry={mesh.geometry}
+                            material={mesh.material}
+                        />
+                    ))}
+                </>
+            )}
 
             {/* First set of scrolling text */}
             <group position={[-10, verticalGap, -2]}>
