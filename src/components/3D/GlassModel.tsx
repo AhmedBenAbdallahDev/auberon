@@ -1,6 +1,6 @@
 'use client';
 import React, { useRef, useEffect } from 'react'
-import { MeshTransmissionMaterial, useGLTF, Text } from "@react-three/drei";
+import { MeshTransmissionMaterial, useGLTF, Text, OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from '@react-three/fiber'
 import { useControls, LevaPanel } from 'leva'
 import { Mesh, Group } from 'three'
@@ -18,14 +18,18 @@ useGLTF.preload("/medias/torrus.glb")
 export default function GlassModel() {
     const { nodes } = useGLTF("/medias/torrus.glb") as unknown as GLTFResult;
     const customModel = useGLTF("/medias/model.glb") as unknown as GLTFResult;
+    const sonicModel = useGLTF("/medias/sonic.glb") as unknown as GLTFResult;
     const { viewport } = useThree()
     const meshRefs = useRef<Mesh[]>([]);
+    const customModelGroupRef = useRef<Group>(null);
+    const sonicGroupRef = useRef<Group>(null);
     
     // Add mouse movement tracking
     const mouseSpeed = useRef(0);
     const lastMouseX = useRef(0);
     const lastMouseY = useRef(0);
     const baseSpeed = useRef(0.02);
+    const mouse = useRef({ x: 0, y: 0 });
 
     // Speed multipliers for each line
     const speedMultipliers = {
@@ -58,14 +62,62 @@ export default function GlassModel() {
     const [show, setShow] = React.useState(false);
 
     // Add model controls to the panel
-    const { useCustomMesh, torusScale, customModelScale, textScale } = useControls(
-        'Model Controls',
+    const { useCustomMesh, useSonic, torusScale, textScale } = useControls(
+        'General Controls',
         {
             useCustomMesh: { value: false, label: 'Use Custom Model' },
+            useSonic: { value: true, label: 'Use Sonic Model' },
             torusScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Torus Zoom' },
-            customModelScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Custom Model Zoom' },
-            textScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Text Zoom' }
+            textScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Text Zoom' },
         }
+    );
+
+    const { customModelScale, customModelSize, customModelRotation, customModelPosition } = useControls(
+        'Custom Model Controls',
+        {
+            customModelScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'View Zoom' },
+            customModelSize: { 
+                value: { x: 1, y: 1, z: 1 }, 
+                step: 0.1, 
+                label: 'Model Size' 
+            },
+            customModelRotation: {
+                value: { x: 0, y: 6.2, z: 0 },
+                step: 0.1,
+                label: 'Model Rotation'
+            },
+            customModelPosition: {
+                value: { x: 0, y: -0.6, z: 0 },
+                step: 0.1,
+                label: 'Model Position'
+            }
+        },
+        { collapsed: true }
+    );
+
+    const { sonicModelScale, sonicModelSize, sonicModelRotation, sonicModelPosition } = useControls(
+        'Sonic Model Controls',
+        {
+            sonicModelScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'View Zoom' },
+            sonicModelSize: { 
+                value: { x: 0.04, y: 0.04, z: 0.04 }, 
+                min: 0.0001,
+                max: 5,
+                step: 0.0001, 
+                label: 'Model Size' 
+            },
+            sonicModelRotation: {
+                value: { x: 0, y: 6.2, z: 0 },
+                step: 0.1,
+                label: 'Model Rotation'
+            },
+            sonicModelPosition: {
+                value: { x: 0, y: 0, z: 0 },
+                step: 0.1,
+                label: 'Model Position'
+            }
+        },
+        { collapsed: true }
     );
 
     // Add controls to the panel
@@ -106,20 +158,14 @@ export default function GlassModel() {
 
     useEffect(() => {
         const handleMouseMove = (event: MouseEvent) => {
-            const dx = event.clientX - lastMouseX.current;
-            const dy = event.clientY - lastMouseY.current;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            // Update mouse speed with smooth interpolation
-            mouseSpeed.current = Math.min(Math.max(distance * 0.005, defaultSpeed), 0.5);
-            
-            lastMouseX.current = event.clientX;
-            lastMouseY.current = event.clientY;
+            // Convert mouse position to normalized coordinates (-1 to 1)
+            mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
         };
 
         window.addEventListener('mousemove', handleMouseMove);
         return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [defaultSpeed]);
+    }, []);
 
     // Track separate positions for each line
     const positions = useRef({
@@ -233,21 +279,34 @@ export default function GlassModel() {
     }, []);
 
     useFrame(() => {
-        // Animate all meshes
-        meshRefs.current.forEach((mesh) => {
-            if (mesh) {
-                mesh.rotation.x += 0.02;
-                mesh.rotation.y += 0.01;
-            }
-        });
+        // Only rotate the torus model
+        if (!useCustomMesh && !useSonic && meshRefs.current[0]) {
+            meshRefs.current[0].rotation.x += 0.02;
+            meshRefs.current[0].rotation.y += 0.01;
+        }
+
+        // Animate Sonic model
+        if (useSonic && sonicGroupRef.current) {
+            // Simple floating animation
+            sonicGroupRef.current.position.y = sonicModelPosition.y + Math.sin(Date.now() * 0.001) * 0.05;
+            
+            // Look at mouse position with clamping
+            const targetX = Math.max(-0.5, Math.min(0.5, mouse.current.x)) * 1.5; // Clamp horizontal rotation
+            const targetY = Math.max(-0.3, Math.min(0.3, -mouse.current.y)) * 1.5; // Clamp vertical rotation with inversion
+            const targetZ = -2;
+
+            // Smoothly rotate towards mouse with slower interpolation
+            sonicGroupRef.current.rotation.x += (targetY - sonicGroupRef.current.rotation.x) * 0.02;
+            sonicGroupRef.current.rotation.y += (targetX - sonicGroupRef.current.rotation.y) * 0.02;
+        }
     });
 
     return (
         <group scale={viewport.width / 3.75}>
             {/* Model group with separate zoom scale based on model type */}
-            <group scale={!useCustomMesh ? torusScale : customModelScale}>
-                {/* Render either the torus or custom model based on the toggle */}
-                {!useCustomMesh ? (
+            <group scale={!useCustomMesh && !useSonic ? torusScale : (useSonic ? sonicModelScale : customModelScale)}>
+                {/* Render either the torus, custom model, or sonic based on the toggle */}
+                {!useCustomMesh && !useSonic ? (
                     <mesh 
                         ref={(el) => { if (el) meshRefs.current[0] = el; }}
                         {...nodes.Torus002}
@@ -255,16 +314,37 @@ export default function GlassModel() {
                         <MeshTransmissionMaterial {...materialProps} />
                     </mesh>
                 ) : (
-                    <>
-                        {Object.values(customModel.nodes).map((mesh, index) => (
-                            <mesh
-                                key={mesh.name}
-                                ref={(el) => { if (el) meshRefs.current[index] = el; }}
-                                geometry={mesh.geometry}
-                                material={mesh.material}
-                            />
-                        ))}
-                    </>
+                    <group>
+                        <OrbitControls 
+                            enablePan={false}
+                            enableZoom={true}
+                            minDistance={1}
+                            maxDistance={10}
+                            makeDefault={false}
+                            enabled={!useSonic} // Disable controls for Sonic
+                        />
+                        <group 
+                            ref={useSonic ? sonicGroupRef : customModelGroupRef}
+                            rotation={useSonic ? 
+                                [0, 0, 0] : // Let the animation handle Sonic's rotation
+                                [customModelRotation.x, customModelRotation.y, customModelRotation.z]}
+                            position={useSonic ?
+                                [sonicModelPosition.x, sonicModelPosition.y, sonicModelPosition.z] :
+                                [customModelPosition.x, customModelPosition.y, customModelPosition.z]}
+                            scale={useSonic ? 
+                                [sonicModelSize.x, sonicModelSize.y, sonicModelSize.z] : 
+                                [customModelSize.x, customModelSize.y, customModelSize.z]}
+                        >
+                            {Object.values(useSonic ? sonicModel.nodes : customModel.nodes).map((mesh, index) => (
+                                <mesh
+                                    key={mesh.name}
+                                    ref={(el) => { if (el) meshRefs.current[index] = el; }}
+                                    geometry={mesh.geometry}
+                                    material={mesh.material}
+                                />
+                            ))}
+                        </group>
+                    </group>
                 )}
             </group>
 
