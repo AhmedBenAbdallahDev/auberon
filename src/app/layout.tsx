@@ -68,23 +68,52 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: "AUBERON Agency Preview",
+        type: "image/png",
       },
       {
         url: "/meta/og-image-square.png",
         width: 600,
         height: 600,
         alt: "AUBERON Agency Square Preview",
+        type: "image/png",
       }
     ],
   },
   twitter: {
     card: "summary_large_image",
+    site: "@auberon_agency",
+    creator: "@auberon_agency",
     title: "AUBERON Agency | Digital Excellence",
     description: "Transforming Ideas into Digital Excellence. We craft innovative digital experiences through creative design and cutting-edge development.",
-    creator: "@auberon_agency",
-    images: ["/meta/twitter-image.png"],
+    images: ["/meta/og-image.png"],
   },
   other: {
+    // General Social Media
+    "og:image:width": "1200",
+    "og:image:height": "630",
+    "og:image:type": "image/png",
+    "og:image:alt": "AUBERON Agency Preview",
+    "og:site_name": "AUBERON Agency",
+    "og:locale:alternate": ["fr_FR", "es_ES", "de_DE"],
+    
+    // Facebook specific
+    "fb:app_id": "", // Add your Facebook App ID if you have one
+    
+    // LinkedIn specific
+    "linkedin:card": "summary_large_image",
+    "linkedin:image": "/meta/og-image.png",
+    "linkedin:title": "AUBERON Agency | Digital Excellence",
+    "linkedin:description": "Transforming Ideas into Digital Excellence. We craft innovative digital experiences through creative design and cutting-edge development.",
+    
+    // Pinterest specific
+    "pinterest:image": "/meta/og-image.png",
+    "pinterest:description": "Transforming Ideas into Digital Excellence. We craft innovative digital experiences through creative design and cutting-edge development.",
+    
+    // WhatsApp specific
+    "og:whatsapp:title": "AUBERON Agency | Digital Excellence",
+    "og:whatsapp:description": "Transforming Ideas into Digital Excellence",
+    
+    // Microsoft Tile
     "msapplication-TileColor": "#0B0D21",
     "msapplication-config": "/meta/browserconfig.xml",
     "apple-mobile-web-app-capable": "yes",

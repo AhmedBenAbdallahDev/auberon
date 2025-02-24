@@ -58,11 +58,13 @@ export default function GlassModel() {
     const [show, setShow] = React.useState(false);
 
     // Add model controls to the panel
-    const { useCustomMesh, modelScale } = useControls(
+    const { useCustomMesh, torusScale, customModelScale, textScale } = useControls(
         'Model Controls',
         {
             useCustomMesh: { value: false, label: 'Use Custom Model' },
-            modelScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Zoom' }
+            torusScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Torus Zoom' },
+            customModelScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Custom Model Zoom' },
+            textScale: { value: 1, min: 0.1, max: 5, step: 0.1, label: 'Text Zoom' }
         }
     );
 
@@ -242,8 +244,8 @@ export default function GlassModel() {
 
     return (
         <group scale={viewport.width / 3.75}>
-            {/* Model group with separate zoom scale */}
-            <group scale={modelScale}>
+            {/* Model group with separate zoom scale based on model type */}
+            <group scale={!useCustomMesh ? torusScale : customModelScale}>
                 {/* Render either the torus or custom model based on the toggle */}
                 {!useCustomMesh ? (
                     <mesh 
@@ -266,83 +268,86 @@ export default function GlassModel() {
                 )}
             </group>
 
-            {/* First set of scrolling text */}
-            <group position={[-10, verticalGap, -2]}>
-                <group ref={firstText1}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
+            {/* Text group with its own scale */}
+            <group scale={textScale}>
+                {/* First set of scrolling text */}
+                <group position={[-10, verticalGap, -2]}>
+                    <group ref={firstText1}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
+                    <group ref={secondText1}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
                 </group>
-                <group ref={secondText1}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
-                </group>
-            </group>
 
-            <group position={[-10, 0, -2]}>
-                <group ref={firstText2}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
+                <group position={[-10, 0, -2]}>
+                    <group ref={firstText2}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
+                    <group ref={secondText2}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
                 </group>
-                <group ref={secondText2}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
-                </group>
-            </group>
 
-            <group position={[-10, -verticalGap, -2]}>
-                <group ref={firstText3}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
+                <group position={[-10, -verticalGap, -2]}>
+                    <group ref={firstText3}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
+                    <group ref={secondText3}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
                 </group>
-                <group ref={secondText3}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
-                </group>
-            </group>
 
-            {/* Second set of scrolling text (offset) */}
-            <group position={[-10, verticalGap, -2]}>
-                <group ref={offsetText1}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
+                {/* Second set of scrolling text (offset) */}
+                <group position={[-10, verticalGap, -2]}>
+                    <group ref={offsetText1}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
+                    <group ref={offsetText1b}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
                 </group>
-                <group ref={offsetText1b}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
-                </group>
-            </group>
 
-            <group position={[-10, 0, -2]}>
-                <group ref={offsetText2}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
+                <group position={[-10, 0, -2]}>
+                    <group ref={offsetText2}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
+                    <group ref={offsetText2b}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
                 </group>
-                <group ref={offsetText2b}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
-                </group>
-            </group>
 
-            <group position={[-10, -verticalGap, -2]}>
-                <group ref={offsetText3}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
-                </group>
-                <group ref={offsetText3b}>
-                    <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
-                        Transforming Ideas into Digital Excellence ✨ 
-                    </Text>
+                <group position={[-10, -verticalGap, -2]}>
+                    <group ref={offsetText3}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
+                    <group ref={offsetText3b}>
+                        <Text fontSize={fontSize} color="white" anchorX="left" anchorY="middle" font={'/fonts/PPNeueMontreal-Bold.otf'} letterSpacing={0.05}>
+                            Transforming Ideas into Digital Excellence ✨ 
+                        </Text>
+                    </group>
                 </group>
             </group>
         </group>
